@@ -75,7 +75,17 @@
                                             <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student->name ?? '-' }}</a></td>
                                             <td class="py-2">{{ $intern->dudi->name ?? '-' }}</td>
                                             <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '-' }}</td>
-                                            <td class="py-2"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $intern->status === 'active' ? 'bg-emerald-100 text-emerald-700' : ($intern->status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">{{ ucfirst($intern->status) }}</span></td>
+                                            <td class="py-2">
+                                                @php
+                                                    $statusLower = strtolower($intern->status ?? '');
+                                                    $badgeClass = 'bg-gray-100 text-gray-700';
+                                                    if (in_array($statusLower, ['active','aktif'])) $badgeClass = 'bg-emerald-100 text-emerald-700';
+                                                    elseif (in_array($statusLower, ['pending'])) $badgeClass = 'bg-amber-100 text-amber-700';
+                                                    elseif (in_array($statusLower, ['completed','selesai'])) $badgeClass = 'bg-blue-100 text-blue-700';
+                                                    elseif (in_array($statusLower, ['ditolak','cancelled'])) $badgeClass = 'bg-red-100 text-red-700';
+                                                @endphp
+                                                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $intern->status }}</span>
+                                            </td>
                                         </tr>
                                         @empty
                                         <tr><td class="py-4 text-gray-500" colspan="4">Belum ada data.</td></tr>
@@ -168,7 +178,17 @@
                                             <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student->name ?? '-' }}</a></td>
                                             <td class="py-2">{{ $intern->dudi->name ?? '-' }}</td>
                                             <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '-' }}</td>
-                                            <td class="py-2"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $intern->status === 'active' ? 'bg-emerald-100 text-emerald-700' : ($intern->status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">{{ ucfirst($intern->status) }}</span></td>
+                                            <td class="py-2">
+                                                @php
+                                                    $statusLower = strtolower($intern->status ?? '');
+                                                    $badgeClass = 'bg-gray-100 text-gray-700';
+                                                    if (in_array($statusLower, ['active','aktif'])) $badgeClass = 'bg-emerald-100 text-emerald-700';
+                                                    elseif (in_array($statusLower, ['pending'])) $badgeClass = 'bg-amber-100 text-amber-700';
+                                                    elseif (in_array($statusLower, ['completed','selesai'])) $badgeClass = 'bg-blue-100 text-blue-700';
+                                                    elseif (in_array($statusLower, ['ditolak','cancelled'])) $badgeClass = 'bg-red-100 text-red-700';
+                                                @endphp
+                                                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $intern->status }}</span>
+                                            </td>
                                         </tr>
                                         @empty
                                         <tr><td class="py-4 text-gray-500" colspan="4">Belum ada data.</td></tr>

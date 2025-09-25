@@ -28,7 +28,7 @@ class DashboardController extends Controller
             $data['adminStats'] = [
                 'totalStudents' => User::where('role', 'siswa')->count(),
                 'totalDudis' => Dudi::count(),
-                'activeInternships' => Internship::where('status', 'active')->count(),
+                'activeInternships' => Internship::whereIn('status', ['active', 'Aktif'])->count(),
                 'journalsToday' => Journal::whereDate('date', $today)->count(),
             ];
 
@@ -57,7 +57,7 @@ class DashboardController extends Controller
                     ->distinct()
                     ->count('id'),
                 'activeMentorInternships' => Internship::where('teacher_id', $teacherId)
-                    ->where('status', 'active')
+                    ->whereIn('status', ['active', 'Aktif'])
                     ->count(),
                 'journalsTodayMentor' => Journal::whereHas('internship', function ($q) use ($teacherId) {
                         $q->where('teacher_id', $teacherId);
