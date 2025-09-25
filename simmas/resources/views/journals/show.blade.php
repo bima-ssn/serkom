@@ -68,7 +68,7 @@
                     </div>
                     @endif
                     
-                    @if(auth()->user()->role === 'teacher' && $journal->status === 'Menunggu Verifikasi')
+                    @if(auth()->user()->role === 'guru' && $journal->status === 'Menunggu Verifikasi')
                     <hr>
                     <h5 class="mt-4 mb-3">Verifikasi Jurnal</h5>
                     <form method="POST" action="{{ route('journals.verify', $journal->id) }}">
