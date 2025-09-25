@@ -65,8 +65,9 @@ class DudiController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        $this->authorizeAdmin($request);
         return view('dudis.create');
     }
 

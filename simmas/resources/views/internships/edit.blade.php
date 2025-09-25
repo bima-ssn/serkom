@@ -103,10 +103,10 @@
                             <label for="status" class="col-md-4 col-form-label text-md-end">Status</label>
                             <div class="col-md-6">
                                 <select id="status" class="form-select @error('status') is-invalid @enderror" name="status" required>
-                                    <option value="pending" {{ (old('status', $internship->status) == 'pending') ? 'selected' : '' }}>Menunggu</option>
-                                    <option value="active" {{ (old('status', $internship->status) == 'active') ? 'selected' : '' }}>Aktif</option>
-                                    <option value="completed" {{ (old('status', $internship->status) == 'completed') ? 'selected' : '' }}>Selesai</option>
-                                    <option value="cancelled" {{ (old('status', $internship->status) == 'cancelled') ? 'selected' : '' }}>Dibatalkan</option>
+                                    <option value="Pending" {{ (old('status', $internship->status) == 'Pending') ? 'selected' : '' }}>Menunggu</option>
+                                    <option value="Aktif" {{ (old('status', $internship->status) == 'Aktif') ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Selesai" {{ (old('status', $internship->status) == 'Selesai') ? 'selected' : '' }}>Selesai</option>
+                                    <option value="Ditolak" {{ (old('status', $internship->status) == 'Ditolak') ? 'selected' : '' }}>Ditolak</option>
                                 </select>
                                 @error('status')
                                     <span class="invalid-feedback" role="alert">

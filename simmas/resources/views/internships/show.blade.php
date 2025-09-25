@@ -41,14 +41,14 @@
                     <div class="row mb-3">
                         <div class="col-md-4 fw-bold">Status</div>
                         <div class="col-md-8">
-                            @if($internship->status == 'pending')
+                            @if($internship->status == 'Pending')
                                 <span class="badge bg-warning">Menunggu</span>
-                            @elseif($internship->status == 'active')
+                            @elseif($internship->status == 'Aktif')
                                 <span class="badge bg-success">Aktif</span>
-                            @elseif($internship->status == 'completed')
+                            @elseif($internship->status == 'Selesai')
                                 <span class="badge bg-primary">Selesai</span>
-                            @elseif($internship->status == 'cancelled')
-                                <span class="badge bg-danger">Dibatalkan</span>
+                            @elseif($internship->status == 'Ditolak')
+                                <span class="badge bg-danger">Ditolak</span>
                             @endif
                         </div>
                     </div>
@@ -73,13 +73,13 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
-                                        <td>{{ Str::limit($journal->activity, 100) }}</td>
+                                        <td>{{ Str::limit($journal->description, 100) }}</td>
                                         <td>
-                                            @if($journal->status == 'pending')
+                                            @if($journal->status == 'Menunggu Verifikasi')
                                                 <span class="badge bg-warning">Menunggu</span>
-                                            @elseif($journal->status == 'approved')
+                                            @elseif($journal->status == 'Disetujui')
                                                 <span class="badge bg-success">Disetujui</span>
-                                            @elseif($journal->status == 'rejected')
+                                            @elseif($journal->status == 'Ditolak')
                                                 <span class="badge bg-danger">Ditolak</span>
                                             @endif
                                         </td>

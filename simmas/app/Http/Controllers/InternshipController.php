@@ -33,7 +33,7 @@ class InternshipController extends Controller
      */
     public function create()
     {
-        $dudis = Dudi::where('status', 'active')->get();
+        $dudis = Dudi::where('status', 'Aktif')->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
         
@@ -52,7 +52,7 @@ class InternshipController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
-            'status' => 'required|in:pending,active,completed,cancelled',
+            'status' => 'required|in:Pending,Aktif,Selesai,Ditolak',
         ]);
 
         Internship::create($request->all());
@@ -74,7 +74,7 @@ class InternshipController extends Controller
      */
     public function edit(Internship $internship)
     {
-        $dudis = Dudi::where('status', 'active')->get();
+        $dudis = Dudi::where('status', 'Aktif')->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
         
@@ -93,7 +93,7 @@ class InternshipController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
-            'status' => 'required|in:pending,active,completed,cancelled',
+            'status' => 'required|in:Pending,Aktif,Selesai,Ditolak',
         ]);
 
         $internship->update($request->all());
