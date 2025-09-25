@@ -42,11 +42,7 @@
                             <x-input-error :messages="$errors->get('pic_name')" class="mt-2" />
                         </div>
                         
-                        <div class="mb-4">
-                            <x-input-label for="pic_contact" :value="__('Kontak PIC')" />
-                            <x-text-input id="pic_contact" class="block mt-1 w-full" type="text" name="pic_contact" :value="old('pic_contact')" required />
-                            <x-input-error :messages="$errors->get('pic_contact')" class="mt-2" />
-                        </div>
+                        
                         
                         <div class="mb-4">
                             <x-input-label for="status" :value="__('Status')" />

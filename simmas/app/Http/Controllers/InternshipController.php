@@ -18,9 +18,13 @@ class InternshipController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $internships = Internship::with(['dudi', 'student', 'teacher'])->latest()->get();
+        $query = Internship::with(['dudi', 'student', 'teacher'])->latest();
+        if ($dudiId = $request->input('dudi_id')) {
+            $query->where('dudi_id', $dudiId);
+        }
+        $internships = $query->get();
         return view('internships.index', compact('internships'));
     }
 

@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     
     // DUDI Management
     Route::resource('dudis', DudiController::class);
+    Route::post('dudis/{id}/restore', [DudiController::class, 'restore'])->name('dudis.restore');
     
     // School Settings
     Route::resource('school-settings', SchoolSettingController::class)->only(['index', 'update']);
