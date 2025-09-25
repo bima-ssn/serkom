@@ -41,14 +41,14 @@
                                         <td>{{ \Carbon\Carbon::parse($internship->start_date)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($internship->end_date)->format('d/m/Y') }}</td>
                                         <td>
-                                            @if($internship->status == 'pending')
+                                            @if($internship->status == 'Pending')
                                                 <span class="badge bg-warning">Menunggu</span>
-                                            @elseif($internship->status == 'active')
+                                            @elseif($internship->status == 'Aktif')
                                                 <span class="badge bg-success">Aktif</span>
-                                            @elseif($internship->status == 'completed')
+                                            @elseif($internship->status == 'Selesai')
                                                 <span class="badge bg-primary">Selesai</span>
-                                            @elseif($internship->status == 'cancelled')
-                                                <span class="badge bg-danger">Dibatalkan</span>
+                                            @elseif($internship->status == 'Ditolak')
+                                                <span class="badge bg-danger">Ditolak</span>
                                             @endif
                                         </td>
                                         <td>

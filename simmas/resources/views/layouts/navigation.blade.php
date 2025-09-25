@@ -17,25 +17,25 @@
                     </x-nav-link>
                     
                     @if(Auth::user()->role == 'admin')
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('users.*')">
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                         {{ __('Manajemen Pengguna') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('school-settings.*')">
+                    <x-nav-link :href="route('school-settings.index')" :active="request()->routeIs('school-settings.*')">
                         {{ __('Pengaturan Sekolah') }}
                     </x-nav-link>
                     @endif
                     
                     @if(Auth::user()->role == 'admin' || Auth::user()->role == 'guru')
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dudis.*')">
+                    <x-nav-link :href="route('dudis.index')" :active="request()->routeIs('dudis.*')">
                         {{ __('Manajemen DUDI') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('internships.*')">
+                    <x-nav-link :href="route('internships.index')" :active="request()->routeIs('internships.*')">
                         {{ __('Manajemen Magang') }}
                     </x-nav-link>
                     @endif
                     
                     @if(Auth::user()->role == 'siswa')
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('journals.*')">
+                    <x-nav-link :href="route('journals.index')" :active="request()->routeIs('journals.*')">
                         {{ __('Jurnal Harian') }}
                     </x-nav-link>
                     @endif
@@ -96,25 +96,25 @@
             </x-responsive-nav-link>
             
             @if(Auth::user()->role == 'admin')
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('users.*')">
+            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                 {{ __('Manajemen Pengguna') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('school-settings.*')">
+            <x-responsive-nav-link :href="route('school-settings.index')" :active="request()->routeIs('school-settings.*')">
                 {{ __('Pengaturan Sekolah') }}
             </x-responsive-nav-link>
             @endif
             
             @if(Auth::user()->role == 'admin' || Auth::user()->role == 'guru')
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dudis.*')">
+            <x-responsive-nav-link :href="route('dudis.index')" :active="request()->routeIs('dudis.*')">
                 {{ __('Manajemen DUDI') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('internships.*')">
+            <x-responsive-nav-link :href="route('internships.index')" :active="request()->routeIs('internships.*')">
                 {{ __('Manajemen Magang') }}
             </x-responsive-nav-link>
             @endif
             
             @if(Auth::user()->role == 'siswa')
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('journals.*')">
+            <x-responsive-nav-link :href="route('journals.index')" :active="request()->routeIs('journals.*')">
                 {{ __('Jurnal Harian') }}
             </x-responsive-nav-link>
             @endif
