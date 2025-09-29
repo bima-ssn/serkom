@@ -63,7 +63,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="py-8 px-4 border-b border-gray-200">
-                                            <x-empty-state title="Belum ada DUDI" :action="view('components.primary-button', ['slot' => 'Tambah DUDI'])->with(['attributes' => collect(['href' => route('dudis.create')])])" />
+                                            <x-empty-state title="Belum ada DUDI" actionHref="{{ route('dudis.create') }}" actionLabel="Tambah DUDI" />
                                         </td>
                                     </tr>
                                 @endforelse

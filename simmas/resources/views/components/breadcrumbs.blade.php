@@ -15,4 +15,4 @@
             </li>
         @endforeach
     </ol>
-}</nav>
+</nav>

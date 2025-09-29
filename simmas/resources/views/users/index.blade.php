@@ -63,7 +63,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="py-8 px-4 border-b border-gray-200">
-                                            <x-empty-state title="Belum ada pengguna" :action="view('components.primary-button', ['slot' => 'Tambah Pengguna'])->with(['attributes' => collect(['href' => route('users.create'), 'class' => 'inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700'])])" />
+                                            <x-empty-state title="Belum ada pengguna" actionHref="{{ route('users.create') }}" actionLabel="Tambah Pengguna" />
                                         </td>
                                     </tr>
                                 @endforelse
