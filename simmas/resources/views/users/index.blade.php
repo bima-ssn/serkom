@@ -1,12 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Manajemen Pengguna') }}
-            </h2>
-            <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Tambah Pengguna
-            </a>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Manajemen Pengguna') }}</h2>
+                <x-breadcrumbs :items="[
+                    ['label' => 'Dashboard', 'href' => route('dashboard')],
+                    ['label' => 'Pengguna']
+                ]" />
+            </div>
+            <a href="{{ route('users.create') }}" class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700">Tambah Pengguna</a>
         </div>
     </x-slot>
 
@@ -60,7 +62,9 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="py-4 px-4 border-b border-gray-200 text-center text-gray-500">Tidak ada data pengguna</td>
+                                        <td colspan="6" class="py-8 px-4 border-b border-gray-200">
+                                            <x-empty-state title="Belum ada pengguna" :action="view('components.primary-button', ['slot' => 'Tambah Pengguna'])->with(['attributes' => collect(['href' => route('users.create'), 'class' => 'inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700'])])" />
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>

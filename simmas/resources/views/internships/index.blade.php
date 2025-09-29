@@ -1,7 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Manajemen Magang') }}</h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Manajemen Magang') }}</h2>
+                <x-breadcrumbs :items="[
+                    ['label' => 'Dashboard', 'href' => route('dashboard')],
+                    ['label' => 'Magang']
+                ]" />
+            </div>
             <a href="{{ route('internships.create') }}" class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700">Tambah Magang</a>
         </div>
     </x-slot>
@@ -64,7 +70,9 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="py-4 px-4 border-b border-gray-200 text-center">Tidak ada data magang</td>
+                                        <td colspan="8" class="py-8 px-4 border-b border-gray-200">
+                                            <x-empty-state title="Belum ada data magang" :action="view('components.primary-button', ['slot' => 'Tambah Magang'])->with(['attributes' => collect(['href' => route('internships.create')])])" />
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
