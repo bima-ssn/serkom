@@ -24,32 +24,32 @@
                         <table class="min-w-full bg-white">
                             <thead>
                                 <tr>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Alamat</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Telepon</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">PIC</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Alamat</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Telepon</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">PIC</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                    <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($dudis as $dudi)
-                                    <tr>
-                                        <td class="py-2 px-4 border-b border-gray-200">{{ $dudi->name }}</td>
-                                        <td class="py-2 px-4 border-b border-gray-200">{{ $dudi->address }}</td>
-                                        <td class="py-2 px-4 border-b border-gray-200">{{ $dudi->phone }}</td>
-                                        <td class="py-2 px-4 border-b border-gray-200">{{ $dudi->email }}</td>
-                                        <td class="py-2 px-4 border-b border-gray-200">{{ $dudi->pic_name }}</td>
-                                        <td class="py-2 px-4 border-b border-gray-200">
+                                    <tr class="odd:bg-white even:bg-gray-50">
+                                        <td class="py-2.5 px-4 border-b border-gray-200">{{ $dudi->name }}</td>
+                                        <td class="py-2.5 px-4 border-b border-gray-200">{{ $dudi->address }}</td>
+                                        <td class="py-2.5 px-4 border-b border-gray-200">{{ $dudi->phone }}</td>
+                                        <td class="py-2.5 px-4 border-b border-gray-200">{{ $dudi->email }}</td>
+                                        <td class="py-2.5 px-4 border-b border-gray-200">{{ $dudi->pic_name }}</td>
+                                        <td class="py-2.5 px-4 border-b border-gray-200">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                                 {{ $dudi->status }}
                                             </span>
                                         </td>
-                                        <td class="py-2 px-4 border-b border-gray-200">
-                                            <div class="flex space-x-2">
+                                        <td class="py-2.5 px-4 border-b border-gray-200">
+                                            <div class="flex items-center gap-3">
                                                 <a href="{{ route('dudis.show', $dudi) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
-                                                <a href="{{ route('dudis.edit', $dudi) }}" class="text-yellow-600 hover:text-yellow-900">Edit</a>
+                                                <a href="{{ route('dudis.edit', $dudi) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                                 <form action="{{ route('dudis.destroy', $dudi) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus DUDI ini?');">
                                                     @csrf
                                                     @method('DELETE')
@@ -60,7 +60,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="py-4 px-4 border-b border-gray-200 text-center">Tidak ada data DUDI</td>
+                                        <td colspan="7" class="py-4 px-4 border-b border-gray-200 text-center text-gray-500">Tidak ada data DUDI</td>
                                     </tr>
                                 @endforelse
                             </tbody>

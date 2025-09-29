@@ -1,108 +1,102 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Detail Magang') }}</h2>
+            <div>
+                <a href="{{ route('internships.edit', $internship->id) }}" class="inline-flex items-center px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded-md hover:bg-yellow-600 mr-2">Edit</a>
+                <a href="{{ route('internships.index') }}" class="inline-flex items-center px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">Kembali</a>
+            </div>
+        </div>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">Detail Magang</div>
-
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">DUDI</div>
-                        <div class="col-md-8">{{ $internship->dudi->name }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Siswa</div>
-                        <div class="col-md-8">{{ $internship->student->name }} ({{ $internship->student->nis_nip }})</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Guru Pembimbing</div>
-                        <div class="col-md-8">{{ $internship->teacher->name }} ({{ $internship->teacher->nis_nip }})</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Tanggal Mulai</div>
-                        <div class="col-md-8">{{ \Carbon\Carbon::parse($internship->start_date)->format('d/m/Y') }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Tanggal Selesai</div>
-                        <div class="col-md-8">{{ \Carbon\Carbon::parse($internship->end_date)->format('d/m/Y') }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Deskripsi</div>
-                        <div class="col-md-8">{{ $internship->description ?? '-' }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Status</div>
-                        <div class="col-md-8">
-                            @if($internship->status == 'pending')
-                                <span class="badge bg-warning">Menunggu</span>
-                            @elseif($internship->status == 'active')
-                                <span class="badge bg-success">Aktif</span>
-                            @elseif($internship->status == 'completed')
-                                <span class="badge bg-primary">Selesai</span>
-                            @elseif($internship->status == 'cancelled')
-                                <span class="badge bg-danger">Dibatalkan</span>
-                            @endif
+    <div class="py-12">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">DUDI</p>
+                                <p class="text-base">{{ $internship->dudi->name }}</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Siswa</p>
+                                <p class="text-base">{{ $internship->student->name }} ({{ $internship->student->nis_nip }})</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Guru Pembimbing</p>
+                                <p class="text-base">{{ $internship->teacher->name }} ({{ $internship->teacher->nis_nip }})</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Tanggal Mulai</p>
+                                <p class="text-base">{{ \Carbon\Carbon::parse($internship->start_date)->format('d/m/Y') }}</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Tanggal Selesai</p>
+                                <p class="text-base">{{ \Carbon\Carbon::parse($internship->end_date)->format('d/m/Y') }}</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Status</p>
+                                <div>
+                                    @if($internship->status == 'pending')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
+                                    @elseif($internship->status == 'active')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                    @elseif($internship->status == 'completed')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Selesai</span>
+                                    @elseif($internship->status == 'cancelled')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <hr>
-                    
-                    <h5 class="mt-4 mb-3">Jurnal Harian</h5>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tanggal</th>
-                                    <th>Kegiatan</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($internship->journals as $index => $journal)
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Jurnal Harian</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white">
+                                <thead>
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
-                                        <td>{{ Str::limit($journal->activity, 100) }}</td>
-                                        <td>
-                                            @if($journal->status == 'pending')
-                                                <span class="badge bg-warning">Menunggu</span>
-                                            @elseif($journal->status == 'approved')
-                                                <span class="badge bg-success">Disetujui</span>
-                                            @elseif($journal->status == 'rejected')
-                                                <span class="badge bg-danger">Ditolak</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('journals.show', $journal->id) }}" class="btn btn-info btn-sm">Detail</a>
-                                        </td>
+                                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kegiatan</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">Tidak ada data jurnal</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="mt-3">
-                        <a href="{{ route('internships.edit', $internship->id) }}" class="btn btn-warning">Edit</a>
-                        <a href="{{ route('internships.index') }}" class="btn btn-secondary">Kembali</a>
+                                </thead>
+                                <tbody>
+                                    @forelse ($internship->journals as $index => $journal)
+                                        <tr class="odd:bg-white even:bg-gray-50">
+                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ $index + 1 }}</td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ Str::limit($journal->activity, 100) }}</td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">
+                                                @if($journal->status == 'pending')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
+                                                @elseif($journal->status == 'approved')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
+                                                @elseif($journal->status == 'rejected')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
+                                                @endif
+                                            </td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">
+                                                <a href="{{ route('journals.show', $journal->id) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="py-4 px-4 border-b border-gray-200 text-center text-gray-500">Tidak ada data jurnal</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
