@@ -22,8 +22,17 @@ class JournalController extends Controller
         $user = auth()->user();
         $journals = [];
 
-        if ($user->role === 'admin' || $user->role === 'teacher') {
-            $journals = Journal::with('internship')->latest()->paginate(10);
+        if ($user->role === 'admin' || $user->role === 'guru') {
+            if ($user->role === 'guru') {
+                $journals = Journal::whereHas('internship', function($q) use ($user) {
+                        $q->where('teacher_id', $user->id);
+                    })
+                    ->with('internship')
+                    ->latest()
+                    ->paginate(10);
+            } else {
+                $journals = Journal::with('internship')->latest()->paginate(10);
+            }
         } else {
             $internships = Internship::where('student_id', $user->id)->pluck('id');
             $journals = Journal::whereIn('internship_id', $internships)->with('internship')->latest()->paginate(10);
@@ -42,9 +51,13 @@ class JournalController extends Controller
 
         if ($user->role === 'admin') {
             $internships = Internship::with(['student', 'dudi'])->get();
+        } else if ($user->role === 'guru') {
+            $internships = Internship::where('teacher_id', $user->id)
+                ->with(['student', 'dudi'])
+                ->get();
         } else {
             $internships = Internship::where('student_id', $user->id)
-                ->where('status', 'active')
+                ->whereIn('status', ['active','Aktif'])
                 ->with(['student', 'dudi'])
                 ->get();
         }

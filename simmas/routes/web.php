@@ -5,15 +5,17 @@ use App\Http\Controllers\DudiController;
 use App\Http\Controllers\SchoolSettingController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -22,6 +24,7 @@ Route::middleware('auth')->group(function () {
     
     // DUDI Management
     Route::resource('dudis', DudiController::class);
+    Route::post('dudis/{id}/restore', [DudiController::class, 'restore'])->name('dudis.restore');
     
     // School Settings
     Route::resource('school-settings', SchoolSettingController::class)->only(['index', 'update']);
@@ -32,6 +35,9 @@ Route::middleware('auth')->group(function () {
     // Journal Management
     Route::resource('journals', JournalController::class);
     Route::post('journals/{journal}/verify', [JournalController::class, 'verify'])->name('journals.verify');
+
+    // Users Management (Admin only - controller already enforces role)
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';
