@@ -1,134 +1,101 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Tambah Data Magang') }}</h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Tambah Data Magang</div>
-
-                <div class="card-body">
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
                     <form method="POST" action="{{ route('internships.store') }}">
                         @csrf
 
-                        <div class="row mb-3">
-                            <label for="dudi_id" class="col-md-4 col-form-label text-md-end">DUDI</label>
-                            <div class="col-md-6">
-                                <select id="dudi_id" class="form-select @error('dudi_id') is-invalid @enderror" name="dudi_id" required>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">DUDI</label>
+                                <select id="dudi_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('dudi_id') border-red-300 @enderror" name="dudi_id" required>
                                     <option value="">Pilih DUDI</option>
                                     @foreach($dudis as $dudi)
                                         <option value="{{ $dudi->id }}" {{ old('dudi_id') == $dudi->id ? 'selected' : '' }}>{{ $dudi->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('dudi_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="student_id" class="col-md-4 col-form-label text-md-end">Siswa</label>
-                            <div class="col-md-6">
-                                <select id="student_id" class="form-select @error('student_id') is-invalid @enderror" name="student_id" required>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Siswa</label>
+                                <select id="student_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('student_id') border-red-300 @enderror" name="student_id" required>
                                     <option value="">Pilih Siswa</option>
                                     @foreach($students as $student)
                                         <option value="{{ $student->id }}" {{ old('student_id') == $student->id ? 'selected' : '' }}>{{ $student->name }} ({{ $student->nis_nip }})</option>
                                     @endforeach
                                 </select>
                                 @error('student_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="teacher_id" class="col-md-4 col-form-label text-md-end">Guru Pembimbing</label>
-                            <div class="col-md-6">
-                                <select id="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror" name="teacher_id" required>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Guru Pembimbing</label>
+                                <select id="teacher_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('teacher_id') border-red-300 @enderror" name="teacher_id" required>
                                     <option value="">Pilih Guru</option>
                                     @foreach($teachers as $teacher)
                                         <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }} ({{ $teacher->nis_nip }})</option>
                                     @endforeach
                                 </select>
                                 @error('teacher_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="start_date" class="col-md-4 col-form-label text-md-end">Tanggal Mulai</label>
-                            <div class="col-md-6">
-                                <input id="start_date" type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" value="{{ old('start_date') }}" required>
-                                @error('start_date')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+                                    <input id="start_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('start_date') border-red-300 @enderror" name="start_date" value="{{ old('start_date') }}" required>
+                                    @error('start_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
+                                    <input id="end_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('end_date') border-red-300 @enderror" name="end_date" value="{{ old('end_date') }}" required>
+                                    @error('end_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="end_date" class="col-md-4 col-form-label text-md-end">Tanggal Selesai</label>
-                            <div class="col-md-6">
-                                <input id="end_date" type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" value="{{ old('end_date') }}" required>
-                                @error('end_date')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="description" class="col-md-4 col-form-label text-md-end">Deskripsi</label>
-                            <div class="col-md-6">
-                                <textarea id="description" class="form-control @error('description') is-invalid @enderror" name="description">{{ old('description') }}</textarea>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                                <textarea id="description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('description') border-red-300 @enderror" name="description">{{ old('description') }}</textarea>
                                 @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="status" class="col-md-4 col-form-label text-md-end">Status</label>
-                            <div class="col-md-6">
-                                <select id="status" class="form-select @error('status') is-invalid @enderror" name="status" required>
-                                    <option value="Pending" {{ old('status') == 'Pending' ? 'selected' : '' }}>Menunggu</option>
-                                    <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="Selesai" {{ old('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                                    <option value="Ditolak" {{ old('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('status') border-red-300 @enderror" name="status" required>
+                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                 </select>
                                 @error('status')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Simpan
-                                </button>
-                                <a href="{{ route('internships.index') }}" class="btn btn-secondary">
-                                    Batal
-                                </a>
-                            </div>
+                        <div class="mt-6 flex items-center justify-end">
+                            <x-secondary-button type="button" onclick="window.history.back()">Batal</x-secondary-button>
+                            <x-primary-button class="ms-3">Simpan</x-primary-button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
