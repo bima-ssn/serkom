@@ -72,9 +72,9 @@
                                     <tbody class="divide-y divide-gray-100">
                                         @forelse(($latestInternships ?? []) as $intern)
                                         <tr>
-                                            <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student->name ?? '-' }}</a></td>
-                                            <td class="py-2">{{ $intern->dudi->name ?? '-' }}</td>
-                                            <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '-' }}</td>
+                                            <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student?->name ?? '' }}</a></td>
+                                            <td class="py-2">{{ $intern->dudi?->name ?? '' }}</td>
+                                            <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '' }}</td>
                                             <td class="py-2">
                                                 @php
                                                     $statusLower = strtolower($intern->status ?? '');
@@ -84,7 +84,9 @@
                                                     elseif (in_array($statusLower, ['completed','selesai'])) $badgeClass = 'bg-blue-100 text-blue-700';
                                                     elseif (in_array($statusLower, ['ditolak','cancelled'])) $badgeClass = 'bg-red-100 text-red-700';
                                                 @endphp
+                                                @if(!empty($intern->status))
                                                 <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $intern->status }}</span>
+                                                @endif
                                             </td>
                                         </tr>
                                         @empty
@@ -175,9 +177,9 @@
                                     <tbody class="divide-y divide-gray-100">
                                         @forelse(($latestMentorInternships ?? []) as $intern)
                                         <tr>
-                                            <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student->name ?? '-' }}</a></td>
-                                            <td class="py-2">{{ $intern->dudi->name ?? '-' }}</td>
-                                            <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '-' }}</td>
+                                            <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student?->name ?? '' }}</a></td>
+                                            <td class="py-2">{{ $intern->dudi?->name ?? '' }}</td>
+                                            <td class="py-2">{{ optional($intern->start_date)->format('d M Y') ?? '' }}</td>
                                             <td class="py-2">
                                                 @php
                                                     $statusLower = strtolower($intern->status ?? '');
@@ -187,7 +189,9 @@
                                                     elseif (in_array($statusLower, ['completed','selesai'])) $badgeClass = 'bg-blue-100 text-blue-700';
                                                     elseif (in_array($statusLower, ['ditolak','cancelled'])) $badgeClass = 'bg-red-100 text-red-700';
                                                 @endphp
+                                                @if(!empty($intern->status))
                                                 <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $intern->status }}</span>
+                                                @endif
                                             </td>
                                         </tr>
                                         @empty
@@ -225,9 +229,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                         <div class="p-4 rounded-lg border border-gray-100 bg-blue-50">
                             <p class="text-sm text-gray-600">Status Magang</p>
-                            <p class="text-2xl font-semibold mt-1">{{ $studentInternship->status ?? 'Belum Magang' }}</p>
-                            @if(isset($studentInternship->dudi->name))
-                            <p class="text-sm text-gray-600 mt-1">{{ $studentInternship->dudi->name }}</p>
+                            <p class="text-2xl font-semibold mt-1">{{ $studentInternship?->status ?? '' }}</p>
+                            @if($studentInternship?->dudi?->name)
+                            <p class="text-sm text-gray-600 mt-1">{{ $studentInternship->dudi?->name }}</p>
                             @endif
                         </div>
                         <div class="p-4 rounded-lg border border-gray-100 bg-indigo-50">
