@@ -71,11 +71,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="8" class="py-8 px-4 border-b border-gray-200">
-<<<<<<< Current (Your changes)
-                                            <x-empty-state title="Belum ada data magang" :action="view('components.primary-button', ['slot' => 'Tambah Magang'])->with(['attributes' => collect(['href' => route('internships.create')])])" />
-=======
                                             <x-empty-state title="Belum ada data magang" actionHref="{{ route('internships.create') }}" actionLabel="Tambah Magang" />
->>>>>>> Incoming (Background Agent changes)
                                         </td>
                                     </tr>
                                 @endforelse
