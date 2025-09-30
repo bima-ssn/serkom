@@ -62,23 +62,16 @@
                                     </tr>
                                 @empty
                                     <tr>
-<<<<<<< Current (Your changes)
-<<<<<<< Current (Your changes)
-                                        <td colspan="7" class="py-4 px-4 border-b border-gray-200 text-center text-gray-500">Tidak ada data DUDI</td>
-=======
-                                        <td colspan="7" class="py-8 px-4 border-b border-gray-200">
-                                            <x-empty-state title="Belum ada DUDI" :action="view('components.primary-button', ['slot' => 'Tambah DUDI'])->with(['attributes' => collect(['href' => route('dudis.create')])])" />
-                                        </td>
->>>>>>> Incoming (Background Agent changes)
-=======
                                         <td colspan="7" class="py-8 px-4 border-b border-gray-200">
                                             <x-empty-state title="Belum ada DUDI" actionHref="{{ route('dudis.create') }}" actionLabel="Tambah DUDI" />
                                         </td>
->>>>>>> Incoming (Background Agent changes)
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-4">
+                        {{ $dudis->links() }}
                     </div>
                 </div>
             </div>
