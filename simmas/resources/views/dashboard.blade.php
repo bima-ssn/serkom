@@ -53,7 +53,9 @@
                         </div>
                     </div>
 
+                    @if((isset($latestInternships) && $latestInternships->isNotEmpty()) || (isset($activeDudisWithCounts) && $activeDudisWithCounts->isNotEmpty()))
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        @if(isset($latestInternships) && $latestInternships->isNotEmpty())
                         <div class="rounded-lg border border-gray-100">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="font-semibold">Magang Terbaru</h3>
@@ -70,7 +72,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
-                                        @forelse(($latestInternships ?? []) as $intern)
+                                        @foreach($latestInternships as $intern)
                                         <tr>
                                             <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student?->name ?? '' }}</a></td>
                                             <td class="py-2">{{ $intern->dudi?->name ?? '' }}</td>
@@ -89,33 +91,82 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        @empty
-                                        <tr><td class="py-4 text-gray-500" colspan="4">Belum ada data.</td></tr>
-                                        @endforelse
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
+                        @endif
+                        @if(isset($activeDudisWithCounts) && $activeDudisWithCounts->isNotEmpty())
                         <div class="rounded-lg border border-gray-100">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="font-semibold">DUDI Aktif</h3>
                                 <a href="{{ route('dudis.index') }}" class="text-sm text-indigo-600 hover:underline">Kelola</a>
                             </div>
-                            <div class="p-4">
-                                <ul class="divide-y divide-gray-100">
-                                    @forelse(($activeDudisWithCounts ?? []) as $dudi)
-                                    <li class="py-3 flex items-center justify-between">
-                                        <a href="{{ route('dudis.show', $dudi->id) }}" class="font-medium text-gray-800 hover:text-indigo-600">{{ $dudi->name }}</a>
-                                        <span class="text-sm text-gray-600">Siswa aktif: <span class="font-semibold">{{ $dudi->active_internships_count }}</span></span>
-                                    </li>
-                                    @empty
-                                    <li class="py-4 text-gray-500">Tidak ada DUDI aktif.</li>
-                                    @endforelse
-                                </ul>
+                            <div class="p-4 overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead class="text-gray-500">
+                                        <tr>
+                                            <th class="py-2 text-left">DUDI</th>
+                                            <th class="py-2 text-left">Siswa Aktif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @foreach($activeDudisWithCounts as $dudi)
+                                        <tr>
+                                            <td class="py-2"><a href="{{ route('dudis.show', $dudi->id) }}" class="font-medium text-gray-800 hover:text-indigo-600">{{ $dudi->name }}</a></td>
+                                            <td class="py-2">{{ $dudi->active_internships_count }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                        @endif
                     </div>
+                    @endif
+
+                    @if(isset($latestJournals) && $latestJournals->isNotEmpty())
+                    <div class="rounded-lg border border-gray-100 mt-6">
+                        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                            <h3 class="font-semibold">Logbook Terbaru</h3>
+                            <a href="{{ route('journals.index') }}" class="text-sm text-indigo-600 hover:underline">Lihat semua</a>
+                        </div>
+                        <div class="p-4 overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead class="text-gray-500">
+                                    <tr>
+                                        <th class="py-2 text-left">Siswa</th>
+                                        <th class="py-2 text-left">DUDI</th>
+                                        <th class="py-2 text-left">Tanggal</th>
+                                        <th class="py-2 text-left">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    @foreach($latestJournals as $journal)
+                                    <tr>
+                                        <td class="py-2">{{ $journal->internship?->student?->name ?? '' }}</td>
+                                        <td class="py-2">{{ $journal->internship?->dudi?->name ?? '' }}</td>
+                                        <td class="py-2">{{ optional($journal->date)->format('d M Y') ?? '' }}</td>
+                                        <td class="py-2">
+                                            @php
+                                                $statusLower = strtolower($journal->status ?? '');
+                                                $badgeClass = 'bg-gray-100 text-gray-700';
+                                                if (in_array($statusLower, ['verified','disetujui'])) $badgeClass = 'bg-emerald-100 text-emerald-700';
+                                                elseif (in_array($statusLower, ['pending','menunggu'])) $badgeClass = 'bg-amber-100 text-amber-700';
+                                                elseif (in_array($statusLower, ['rejected','ditolak'])) $badgeClass = 'bg-red-100 text-red-700';
+                                            @endphp
+                                            @if(!empty($journal->status))
+                                            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $journal->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
                     @endif
 
                     @if(($role ?? Auth::user()->role) === 'guru')
@@ -158,7 +209,9 @@
                         </div>
                     </div>
 
+                    @if((isset($latestMentorInternships) && $latestMentorInternships->isNotEmpty()) || (isset($mentorActiveDudisWithCounts) && $mentorActiveDudisWithCounts->isNotEmpty()))
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        @if(isset($latestMentorInternships) && $latestMentorInternships->isNotEmpty())
                         <div class="rounded-lg border border-gray-100">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="font-semibold">Magang Terbaru (Bimbingan)</h3>
@@ -175,7 +228,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
-                                        @forelse(($latestMentorInternships ?? []) as $intern)
+                                        @foreach($latestMentorInternships as $intern)
                                         <tr>
                                             <td class="py-2"><a href="{{ route('internships.show', $intern->id) }}" class="text-indigo-600 hover:underline">{{ $intern->student?->name ?? '' }}</a></td>
                                             <td class="py-2">{{ $intern->dudi?->name ?? '' }}</td>
@@ -194,32 +247,82 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        @empty
-                                        <tr><td class="py-4 text-gray-500" colspan="4">Belum ada data.</td></tr>
-                                        @endforelse
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        @endif
 
+                        @if(isset($mentorActiveDudisWithCounts) && $mentorActiveDudisWithCounts->isNotEmpty())
                         <div class="rounded-lg border border-gray-100">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="font-semibold">DUDI Aktif (Bimbingan)</h3>
                             </div>
-                            <div class="p-4">
-                                <ul class="divide-y divide-gray-100">
-                                    @forelse(($mentorActiveDudisWithCounts ?? []) as $dudi)
-                                    <li class="py-3 flex items-center justify-between">
-                                        <span class="font-medium text-gray-800">{{ $dudi->name }}</span>
-                                        <span class="text-sm text-gray-600">Siswa aktif: <span class="font-semibold">{{ $dudi->active_internships_count }}</span></span>
-                                    </li>
-                                    @empty
-                                    <li class="py-4 text-gray-500">Tidak ada DUDI aktif.</li>
-                                    @endforelse
-                                </ul>
+                            <div class="p-4 overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead class="text-gray-500">
+                                        <tr>
+                                            <th class="py-2 text-left">DUDI</th>
+                                            <th class="py-2 text-left">Siswa Aktif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @foreach($mentorActiveDudisWithCounts as $dudi)
+                                        <tr>
+                                            <td class="py-2">{{ $dudi->name }}</td>
+                                            <td class="py-2">{{ $dudi->active_internships_count }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                        @endif
                     </div>
+                    @endif
+
+                    @if(isset($latestMentorJournals) && $latestMentorJournals->isNotEmpty())
+                    <div class="rounded-lg border border-gray-100 mt-6">
+                        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                            <h3 class="font-semibold">Logbook Terbaru (Bimbingan)</h3>
+                            <a href="{{ route('journals.index') }}" class="text-sm text-indigo-600 hover:underline">Lihat semua</a>
+                        </div>
+                        <div class="p-4 overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead class="text-gray-500">
+                                    <tr>
+                                        <th class="py-2 text-left">Siswa</th>
+                                        <th class="py-2 text-left">DUDI</th>
+                                        <th class="py-2 text-left">Tanggal</th>
+                                        <th class="py-2 text-left">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    @foreach($latestMentorJournals as $journal)
+                                    <tr>
+                                        <td class="py-2">{{ $journal->internship?->student?->name ?? '' }}</td>
+                                        <td class="py-2">{{ $journal->internship?->dudi?->name ?? '' }}</td>
+                                        <td class="py-2">{{ optional($journal->date)->format('d M Y') ?? '' }}</td>
+                                        <td class="py-2">
+                                            @php
+                                                $statusLower = strtolower($journal->status ?? '');
+                                                $badgeClass = 'bg-gray-100 text-gray-700';
+                                                if (in_array($statusLower, ['verified','disetujui'])) $badgeClass = 'bg-emerald-100 text-emerald-700';
+                                                elseif (in_array($statusLower, ['pending','menunggu'])) $badgeClass = 'bg-amber-100 text-amber-700';
+                                                elseif (in_array($statusLower, ['rejected','ditolak'])) $badgeClass = 'bg-red-100 text-red-700';
+                                            @endphp
+                                            @if(!empty($journal->status))
+                                            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs {{ $badgeClass }}">{{ $journal->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
                     @endif
 
                     @if(($role ?? Auth::user()->role) === 'siswa')

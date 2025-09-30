@@ -37,6 +37,11 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
+            $data['latestJournals'] = Journal::with(['internship.student', 'internship.dudi'])
+                ->latest()
+                ->take(5)
+                ->get();
+
             $data['activeDudisWithCounts'] = Dudi::where('status', 'Aktif')
                 ->withCount([
                     'internships as active_internships_count' => function ($q) {
@@ -68,6 +73,14 @@ class DashboardController extends Controller
 
             $data['latestMentorInternships'] = Internship::with(['student', 'dudi'])
                 ->where('teacher_id', $teacherId)
+                ->latest()
+                ->take(5)
+                ->get();
+
+            $data['latestMentorJournals'] = Journal::whereHas('internship', function ($q) use ($teacherId) {
+                    $q->where('teacher_id', $teacherId);
+                })
+                ->with(['internship.student', 'internship.dudi'])
                 ->latest()
                 ->take(5)
                 ->get();
