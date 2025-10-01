@@ -19,7 +19,7 @@
             <div class="flex min-h-screen">
                 @include('layouts.sidebar')
 				<div class="flex-1 flex flex-col">
-					@auth
+					@if(auth()->check())
 					<div class="bg-white border-b border-gray-100">
 						<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-end">
 							<x-dropdown align="right" width="48">
@@ -49,7 +49,7 @@
 							</x-dropdown>
 						</div>
 					</div>
-					@endauth
+					@endif
                     <!-- Page Heading -->
                     @isset($header)
                         <header class="bg-white shadow">
