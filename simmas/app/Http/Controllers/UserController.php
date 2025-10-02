@@ -28,7 +28,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $users = collect();
+        return view('users.create', compact('users'));
     }
 
     /**
