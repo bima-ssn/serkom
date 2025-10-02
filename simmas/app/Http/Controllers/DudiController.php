@@ -22,9 +22,7 @@ class DudiController extends Controller
 
         $query = Dudi::query();
 
-        if ($user->role === 'guru') {
-            $query->whereIn('id', Internship::where('teacher_id', $user->id)->pluck('dudi_id'));
-        }
+        // Show all DUDI to all roles on listing; editing is still admin-only
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
