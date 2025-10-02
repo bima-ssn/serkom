@@ -20,7 +20,11 @@ class DudiController extends Controller
     {
         $user = $request->user();
 
-        $query = Dudi::query();
+        $query = Dudi::query()->withCount([
+            'internships as students_count' => function ($q) {
+                $q->whereIn('status', ['active', 'Aktif']);
+            },
+        ]);
 
         // Show all DUDI to all roles on listing; editing is still admin-only
 
@@ -42,7 +46,7 @@ class DudiController extends Controller
             $query->withTrashed();
         }
 
-        $perPage = (int) ($request->input('perPage') ?: 10);
+        $perPage = (int) $request->input('per_page', 10);
         $perPage = in_array($perPage, [5, 10, 25, 50]) ? $perPage : 10;
 
         $stats = null;
@@ -57,7 +61,9 @@ class DudiController extends Controller
 
         $dudis = $query->orderBy('name')->paginate($perPage)->withQueryString();
 
-        return view('dudis.index', compact('dudis', 'stats', 'perPage'));
+        $totalSiswaMagang = Internship::whereIn('status', ['active', 'Aktif'])->count();
+
+        return view('dudis.index', compact('dudis', 'stats', 'perPage', 'totalSiswaMagang'));
     }
 
     /**
