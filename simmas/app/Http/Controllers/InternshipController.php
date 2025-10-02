@@ -11,7 +11,6 @@ class InternshipController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin,guru')->except(['show']);
         $this->middleware('auth');
     }
     
@@ -31,8 +30,11 @@ class InternshipController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
         $dudis = Dudi::where('status', 'Aktif')->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
@@ -45,6 +47,9 @@ class InternshipController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
         $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
@@ -72,8 +77,11 @@ class InternshipController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Internship $internship)
+    public function edit(Request $request, Internship $internship)
     {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
         $dudis = Dudi::where('status', 'Aktif')->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
@@ -86,6 +94,9 @@ class InternshipController extends Controller
      */
     public function update(Request $request, Internship $internship)
     {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
         $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
@@ -104,8 +115,11 @@ class InternshipController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Internship $internship)
+    public function destroy(Request $request, Internship $internship)
     {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
         $internship->delete();
         return redirect()->route('internships.index')->with('success', 'Data magang berhasil dihapus');
     }

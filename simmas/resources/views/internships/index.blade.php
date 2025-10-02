@@ -8,7 +8,9 @@
                     ['label' => 'Magang']
                 ]" />
             </div>
+            @if(Auth::user()->role == 'guru')
             <a href="{{ route('internships.create') }}" class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700">Tambah Magang</a>
+            @endif
         </div>
     </x-slot>
 
@@ -71,7 +73,11 @@
                                 @empty
                                     <tr>
                                         <td colspan="8" class="py-8 px-4 border-b border-gray-200">
+                                            @if(Auth::user()->role == 'guru')
                                             <x-empty-state title="Belum ada data magang" actionHref="{{ route('internships.create') }}" actionLabel="Tambah Magang" />
+                                            @else
+                                            <x-empty-state title="Belum ada data magang" />
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforelse
