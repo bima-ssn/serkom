@@ -78,10 +78,10 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Status</label>
                                 <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('status') border-red-300 @enderror" name="status" required>
-                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
-                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                                    <option value="Pending" {{ old('status') == 'Pending' ? 'selected' : '' }}>Menunggu</option>
+                                    <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Selesai" {{ old('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="Ditolak" {{ old('status') == 'Ditolak' ? 'selected' : '' }}>Dibatalkan</option>
                                 </select>
                                 @error('status')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
