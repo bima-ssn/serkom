@@ -51,6 +51,9 @@ class DashboardController extends Controller
                 ->orderByDesc('active_internships_count')
                 ->take(5)
                 ->get();
+
+            // Latest DUDI for universal visibility on dashboard
+            $data['latestDudis'] = Dudi::latest()->take(5)->get();
         } elseif ($user->isTeacher()) {
             $teacherId = $user->id;
 
@@ -95,6 +98,9 @@ class DashboardController extends Controller
                 ->orderByDesc('active_internships_count')
                 ->take(5)
                 ->get();
+
+            // Latest DUDI for universal visibility on dashboard
+            $data['latestDudis'] = Dudi::latest()->take(5)->get();
         } elseif ($user->isStudent()) {
             $studentInternship = Internship::with(['dudi', 'teacher'])
                 ->where('student_id', $user->id)
@@ -123,6 +129,9 @@ class DashboardController extends Controller
                 })
                 ->whereDate('date', $today)
                 ->exists();
+
+            // Latest DUDI for universal visibility on dashboard
+            $data['latestDudis'] = Dudi::latest()->take(5)->get();
         }
 
         return view('dashboard', $data);

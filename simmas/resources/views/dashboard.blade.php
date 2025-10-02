@@ -160,6 +160,28 @@
                     @endif
                     @endif
 
+                    @if(isset($latestDudis) && $latestDudis->isNotEmpty())
+                    <div class="rounded-lg border border-gray-100 mt-6">
+                        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                            <h3 class="font-semibold">DUDI Terbaru</h3>
+                            <a href="{{ route('dudis.index') }}" class="text-sm text-indigo-600 hover:underline">Lihat semua</a>
+                        </div>
+                        <div class="p-4">
+                            <ul class="divide-y divide-gray-100 text-sm">
+                                @foreach($latestDudis as $dudi)
+                                <li class="py-2 flex items-center justify-between">
+                                    <div>
+                                        <a href="{{ route('dudis.show', $dudi->id) }}" class="font-medium text-gray-800 hover:text-indigo-600">{{ $dudi->name }}</a>
+                                        <div class="text-gray-500">{{ Str::limit($dudi->address, 60) }}</div>
+                                    </div>
+                                    <span class="px-2 py-0.5 text-xs rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">{{ $dudi->status }}</span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
+
                     @if(($role ?? Auth::user()->role) === 'guru')
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                         <div class="flex items-center gap-4 p-4 rounded-lg border border-gray-100 bg-blue-50">
