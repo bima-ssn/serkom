@@ -40,7 +40,7 @@
                     </div>
                 </a>
             </li>
-            @if(Auth::user()->role == 'guru')
+            @if(Auth::user()->role == 'guru' || Auth::user()->role == 'siswa')
             <li>
                 <a href="{{ route('internships.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium {{ request()->routeIs('internships.*') ? 'bg-teal-600 text-white' : 'text-gray-700 hover:bg-gray-50' }}">
                     <svg class="h-5 w-5 {{ request()->routeIs('internships.*') ? 'text-white' : 'text-gray-500' }}" viewBox="0 0 20 20" fill="currentColor">
@@ -171,7 +171,7 @@
                             <span>DUDI</span>
                         </a>
                     </li>
-                    @if(Auth::user()->role == 'guru')
+                    @if(Auth::user()->role == 'guru' || Auth::user()->role == 'siswa')
                     <li>
                         <a href="{{ route('internships.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium {{ request()->routeIs('internships.*') ? 'bg-teal-600 text-white' : 'text-gray-700 hover:bg-gray-50' }}">
                             <svg class="h-5 w-5 {{ request()->routeIs('internships.*') ? 'text-white' : 'text-gray-500' }}" viewBox="0 0 20 20" fill="currentColor">
