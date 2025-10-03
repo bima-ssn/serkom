@@ -139,15 +139,13 @@
                                                 </div>
                                                 <div>
                                                     <div class="font-semibold text-gray-900">{{ $internship->student->name }}</div>
-                                                    <div class="text-sm text-gray-500">NIS: {{ $internship->student->nis ?? 'N/A' }}</div>
-                                                    <div class="text-xs text-gray-400">{{ $internship->student->class ?? 'N/A' }}</div>
-                                                    <div class="text-xs text-gray-400">{{ $internship->student->major ?? 'Rekayasa Perangkat Lunak' }}</div>
+                                                    <div class="text-sm text-gray-500">NIS/NIP: {{ $internship->student->nis_nip ?? 'N/A' }}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="font-medium text-gray-900">{{ $internship->teacher->name }}</div>
-                                            <div class="text-sm text-gray-500">NIP: {{ $internship->teacher->nip ?? 'N/A' }}</div>
+                                            <div class="text-sm text-gray-500">NIP: {{ $internship->teacher->nis_nip ?? 'N/A' }}</div>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex items-center">
@@ -164,10 +162,14 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($internship->start_date)->format('d M Y') }}</div>
-                                            <div class="text-sm text-gray-500">s/d {{ \Carbon\Carbon::parse($internship->end_date)->format('d M Y') }}</div>
+                                            <div class="text-sm text-gray-900">{{ optional($internship->start_date)->format('d M Y') ?? '-' }}</div>
+                                            <div class="text-sm text-gray-500">s/d {{ optional($internship->end_date)->format('d M Y') ?? '-' }}</div>
                                             <div class="text-xs text-gray-400">
-                                                {{ \Carbon\Carbon::parse($internship->start_date)->diffInDays(\Carbon\Carbon::parse($internship->end_date)) }} hari
+                                                @if($internship->start_date && $internship->end_date)
+                                                    {{ $internship->start_date->diffInDays($internship->end_date) }} hari
+                                                @else
+                                                    -
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
