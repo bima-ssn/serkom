@@ -48,14 +48,30 @@
                                         <td class="py-2 px-4 border-b border-gray-200">{{ \Carbon\Carbon::parse($internship->start_date)->format('d/m/Y') }}</td>
                                         <td class="py-2 px-4 border-b border-gray-200">{{ \Carbon\Carbon::parse($internship->end_date)->format('d/m/Y') }}</td>
                                         <td class="py-2 px-4 border-b border-gray-200">
-                                            @if($internship->status == 'pending')
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
-                                            @elseif($internship->status == 'active')
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                                            @elseif($internship->status == 'completed')
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Selesai</span>
-                                            @elseif($internship->status == 'cancelled')
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
+                                            @php
+                                                $statusRaw = $internship->status ?? '';
+                                                $statusLower = strtolower($statusRaw);
+                                                $badgeClass = 'bg-gray-100 text-gray-800';
+                                                $label = $statusRaw;
+
+                                                if (in_array($statusLower, ['pending', 'menunggu'])) {
+                                                    $badgeClass = 'bg-yellow-100 text-yellow-800';
+                                                    $label = 'Menunggu';
+                                                } elseif (in_array($statusLower, ['aktif', 'active'])) {
+                                                    $badgeClass = 'bg-green-100 text-green-800';
+                                                    $label = 'Aktif';
+                                                } elseif (in_array($statusLower, ['selesai', 'completed'])) {
+                                                    $badgeClass = 'bg-blue-100 text-blue-800';
+                                                    $label = 'Selesai';
+                                                } elseif (in_array($statusLower, ['ditolak', 'cancelled', 'dibatalkan'])) {
+                                                    $badgeClass = 'bg-red-100 text-red-800';
+                                                    $label = 'Ditolak';
+                                                }
+                                            @endphp
+                                            @if(!empty($statusRaw))
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $badgeClass }}">{{ $label }}</span>
+                                            @else
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b border-gray-200">
