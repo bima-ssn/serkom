@@ -184,9 +184,9 @@
                                             @endif
                                         </td>
                                         <td class="py-4 px-4">
-                                            @if($internship->final_score)
+                                            @if(!is_null($internship->final_score))
                                                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lime-500 text-white font-bold">
-                                                    {{ $internship->final_score }}
+                                                    {{ number_format($internship->final_score, 2) }}
                                                 </span>
                                             @else
                                                 <span class="text-gray-400 text-sm">-</span>
