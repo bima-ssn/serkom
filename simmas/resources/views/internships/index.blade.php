@@ -186,7 +186,7 @@
                                         <td class="py-4 px-4">
                                             @if(!is_null($internship->final_score))
                                                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lime-500 text-white font-bold">
-                                                    {{ number_format($internship->final_score, 2) }}
+                                                    {{ floor((float)$internship->final_score) == (float)$internship->final_score ? (int)$internship->final_score : rtrim(rtrim(number_format((float)$internship->final_score, 2, '.', ''), '0'), '.') }}
                                                 </span>
                                             @else
                                                 <span class="text-gray-400 text-sm">-</span>
