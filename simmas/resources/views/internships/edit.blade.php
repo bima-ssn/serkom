@@ -23,11 +23,11 @@
                             <h3 class="text-2xl font-bold text-gray-900">Edit Data Siswa Magang</h3>
                             <p class="text-sm text-gray-500 mt-1">Perbarui informasi data magang siswa</p>
                         </div>
-                        <button type="button" onclick="window.location.href='{{ route('internships.index') }}'" class="text-gray-400 hover:text-gray-600">
+                        <a href="{{ route('internships.index') }}" class="text-gray-400 hover:text-gray-600 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
-                        </button>
+                        </a>
                     </div>
 
                     <form method="POST" action="{{ route('internships.update', $internship->id) }}" class="mt-8">
@@ -47,7 +47,7 @@
                                             type="date" 
                                             class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pl-4 pr-10 py-3 @error('start_date') border-red-300 @enderror" 
                                             name="start_date" 
-                                            value="{{ old('start_date', $internship->start_date) }}" 
+                                            value="{{ old('start_date', optional($internship->start_date)->format('Y-m-d')) }}" 
                                             required
                                         >
                                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -69,7 +69,7 @@
                                             type="date" 
                                             class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pl-4 pr-10 py-3 @error('end_date') border-red-300 @enderror" 
                                             name="end_date" 
-                                            value="{{ old('end_date', $internship->end_date) }}" 
+                                            value="{{ old('end_date', optional($internship->end_date)->format('Y-m-d')) }}" 
                                             required
                                         >
                                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -91,10 +91,10 @@
                                         name="status" 
                                         required
                                     >
-                                        <option value="pending" {{ (old('status', $internship->status) == 'pending') ? 'selected' : '' }}>Pending</option>
-                                        <option value="active" {{ (old('status', $internship->status) == 'active') ? 'selected' : '' }}>Aktif</option>
-                                        <option value="completed" {{ (old('status', $internship->status) == 'completed') ? 'selected' : '' }}>Selesai</option>
-                                        <option value="cancelled" {{ (old('status', $internship->status) == 'cancelled') ? 'selected' : '' }}>Dibatalkan</option>
+                                        <option value="Pending" {{ (old('status', $internship->status) == 'Pending') ? 'selected' : '' }}>Pending</option>
+                                        <option value="Aktif" {{ (old('status', $internship->status) == 'Aktif') ? 'selected' : '' }}>Aktif</option>
+                                        <option value="Selesai" {{ (old('status', $internship->status) == 'Selesai') ? 'selected' : '' }}>Selesai</option>
+                                        <option value="Ditolak" {{ (old('status', $internship->status) == 'Ditolak') ? 'selected' : '' }}>Dibatalkan</option>
                                     </select>
                                     @error('status')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -119,7 +119,6 @@
                                     name="grade" 
                                     value="{{ old('grade', $internship->grade) }}"
                                     placeholder="Hanya bisa diisi jika status selesai"
-                                    {{ $internship->status != 'completed' ? 'disabled' : '' }}
                                 >
                                 <p class="mt-2 text-sm text-gray-500">Nilai hanya dapat diisi setelah status magang selesai</p>
                                 @error('grade')
@@ -128,44 +127,80 @@
                             </div>
                         </div>
 
-                        <!-- Hidden fields for data that shouldn't change -->
-                        <input type="hidden" name="student_id" value="{{ $internship->student_id }}">
-                        <input type="hidden" name="teacher_id" value="{{ $internship->teacher_id }}">
-                        <input type="hidden" name="dudi_id" value="{{ $internship->dudi_id }}">
+                        <!-- Informasi Siswa, Guru & DUDI -->
+                        <div class="mb-8 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Siswa</label>
+                                <select 
+                                    id="student_id" 
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('student_id') border-red-300 @enderror" 
+                                    name="student_id" 
+                                    required
+                                >
+                                    <option value="">Pilih Siswa</option>
+                                    @foreach($students as $student)
+                                        <option value="{{ $student->id }}" {{ (old('student_id', $internship->student_id) == $student->id) ? 'selected' : '' }}>
+                                            {{ $student->name }} ({{ $student->nis_nip }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('student_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <!-- Informasi Tambahan (Read-only) -->
-                        <div class="mb-8 p-4 bg-gray-50 rounded-lg">
-                            <h4 class="text-sm font-semibold text-gray-700 mb-3">Informasi Data Magang</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                <div>
-                                    <p class="text-gray-500">Siswa</p>
-                                    <p class="font-medium text-gray-900">{{ $internship->student->name }}</p>
-                                    <p class="text-xs text-gray-400">NIS: {{ $internship->student->nis_nip ?? 'N/A' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500">Guru Pembimbing</p>
-                                    <p class="font-medium text-gray-900">{{ $internship->teacher->name }}</p>
-                                    <p class="text-xs text-gray-400">NIP: {{ $internship->teacher->nis_nip ?? 'N/A' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500">DUDI</p>
-                                    <p class="font-medium text-gray-900">{{ $internship->dudi->name }}</p>
-                                    <p class="text-xs text-gray-400">{{ $internship->dudi->location ?? 'N/A' }}</p>
-                                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Guru Pembimbing</label>
+                                <select 
+                                    id="teacher_id" 
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('teacher_id') border-red-300 @enderror" 
+                                    name="teacher_id" 
+                                    required
+                                >
+                                    <option value="">Pilih Guru</option>
+                                    @foreach($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}" {{ (old('teacher_id', $internship->teacher_id) == $teacher->id) ? 'selected' : '' }}>
+                                            {{ $teacher->name }} ({{ $teacher->nis_nip }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('teacher_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">DUDI</label>
+                                <select 
+                                    id="dudi_id" 
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('dudi_id') border-red-300 @enderror" 
+                                    name="dudi_id" 
+                                    required
+                                >
+                                    <option value="">Pilih DUDI</option>
+                                    @foreach($dudis as $dudi)
+                                        <option value="{{ $dudi->id }}" {{ (old('dudi_id', $internship->dudi_id) == $dudi->id) ? 'selected' : '' }}>
+                                            {{ $dudi->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('dudi_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
-                        <!-- Catatan Section (Optional) -->
+                        <!-- Deskripsi Section -->
                         <div class="mb-8">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Catatan</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
                             <textarea 
-                                id="notes" 
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('notes') border-red-300 @enderror" 
-                                name="notes" 
+                                id="description" 
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('description') border-red-300 @enderror" 
+                                name="description" 
                                 rows="4"
-                                placeholder="Tambahkan catatan jika diperlukan"
-                            >{{ old('notes', $internship->notes) }}</textarea>
-                            @error('notes')
+                                placeholder="Tambahkan deskripsi magang"
+                            >{{ old('description', $internship->description) }}</textarea>
+                            @error('description')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -194,14 +229,26 @@
 
     <!-- JavaScript for status-based grade input -->
     <script>
-        document.getElementById('status').addEventListener('change', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('status');
             const gradeInput = document.getElementById('grade');
-            if (this.value === 'completed') {
-                gradeInput.disabled = false;
-            } else {
-                gradeInput.disabled = true;
-                gradeInput.value = '';
+            
+            function toggleGradeInput() {
+                if (statusSelect.value === 'Selesai') {
+                    gradeInput.disabled = false;
+                    gradeInput.classList.remove('bg-gray-100');
+                } else {
+                    gradeInput.disabled = true;
+                    gradeInput.classList.add('bg-gray-100');
+                    gradeInput.value = '';
+                }
             }
+            
+            // Check initial state
+            toggleGradeInput();
+            
+            // Listen for changes
+            statusSelect.addEventListener('change', toggleGradeInput);
         });
     </script>
 </x-app-layout>
