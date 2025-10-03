@@ -54,14 +54,14 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
-                                    <input id="start_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('start_date') border-red-300 @enderror" name="start_date" value="{{ old('start_date', $internship->start_date) }}" required>
+                                <input id="start_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('start_date') border-red-300 @enderror" name="start_date" value="{{ old('start_date', optional($internship->start_date)->format('Y-m-d')) }}" required>
                                     @error('start_date')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
-                                    <input id="end_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('end_date') border-red-300 @enderror" name="end_date" value="{{ old('end_date', $internship->end_date) }}" required>
+                                    <input id="end_date" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('end_date') border-red-300 @enderror" name="end_date" value="{{ old('end_date', optional($internship->end_date)->format('Y-m-d')) }}" required>
                                     @error('end_date')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
