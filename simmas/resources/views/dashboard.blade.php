@@ -160,6 +160,8 @@
                     @endif
                     @endif
 
+                    
+
                     @if(($role ?? Auth::user()->role) === 'guru')
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                         <div class="flex items-center gap-4 p-4 rounded-lg border border-gray-100 bg-blue-50">
@@ -270,6 +272,8 @@
                             </div>
                         </div>
                         @endif
+
+                        
                     </div>
                     @endif
 

@@ -5,9 +5,11 @@
                 {{ __('Detail DUDI') }}
             </h2>
             <div>
+                @if(Auth::user()->role == 'admin')
                 <a href="{{ route('dudis.edit', $dudi) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2">
                     Edit
                 </a>
+                @endif
                 <a href="{{ route('dudis.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                     Kembali
                 </a>

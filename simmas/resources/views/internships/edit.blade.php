@@ -79,10 +79,10 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Status</label>
                                 <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('status') border-red-300 @enderror" name="status" required>
-                                    <option value="pending" {{ (old('status', $internship->status) == 'pending') ? 'selected' : '' }}>Menunggu</option>
-                                    <option value="active" {{ (old('status', $internship->status) == 'active') ? 'selected' : '' }}>Aktif</option>
-                                    <option value="completed" {{ (old('status', $internship->status) == 'completed') ? 'selected' : '' }}>Selesai</option>
-                                    <option value="cancelled" {{ (old('status', $internship->status) == 'cancelled') ? 'selected' : '' }}>Dibatalkan</option>
+                                    <option value="Pending" {{ (old('status', $internship->status) == 'Pending') ? 'selected' : '' }}>Menunggu</option>
+                                    <option value="Aktif" {{ (old('status', $internship->status) == 'Aktif') ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Selesai" {{ (old('status', $internship->status) == 'Selesai') ? 'selected' : '' }}>Selesai</option>
+                                    <option value="Ditolak" {{ (old('status', $internship->status) == 'Ditolak') ? 'selected' : '' }}>Dibatalkan</option>
                                 </select>
                                 @error('status')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
