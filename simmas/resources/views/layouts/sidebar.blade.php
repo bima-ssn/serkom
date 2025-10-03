@@ -16,7 +16,7 @@
     
     <!-- Navigation Menu -->
     <nav class="flex-1 px-4">
-        @php($role = Auth::user()->role ?? null)
+        @php $role = Auth::user()->role ?? null; @endphp
         <ul class="space-y-2">
             <li>
                 <a href="{{ route('dashboard') }}" class="group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-teal-600 text-white' : 'text-gray-700 hover:bg-gray-50' }}">
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 px-4">
-                @php($role = Auth::user()->role ?? null)
+                @php $role = Auth::user()->role ?? null; @endphp
                 <ul class="space-y-2">
                     <li>
                         <a href="{{ route('dashboard') }}" class="group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-teal-600 text-white' : 'text-gray-700 hover:bg-gray-50' }}">

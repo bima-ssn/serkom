@@ -17,23 +17,23 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Nama</label>
                                 <input id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="text" name="name" value="{{ old('name', $user->name) }}" required autofocus />
-                                @error('name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                @if ($errors->has('name'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</p>@endif
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Email</label>
                                 <input id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="email" name="email" value="{{ old('email', $user->email) }}" required />
-                                @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                @if ($errors->has('email'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('email') }}</p>@endif
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Password (opsional)</label>
                                     <input id="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="password" name="password" />
-                                    @error('password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                    @if ($errors->has('password'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('password') }}</p>@endif
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
                                     <input id="password_confirmation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="password" name="password_confirmation" />
-                                    @error('password_confirmation')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                    @if ($errors->has('password_confirmation'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('password_confirmation') }}</p>@endif
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -44,17 +44,17 @@
                                         <option value="guru" {{ old('role', $user->role) == 'guru' ? 'selected' : '' }}>Guru</option>
                                         <option value="siswa" {{ old('role', $user->role) == 'siswa' ? 'selected' : '' }}>Siswa</option>
                                     </select>
-                                    @error('role')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                    @if ($errors->has('role'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('role') }}</p>@endif
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">NIS/NIP</label>
                                     <input id="nis_nip" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="text" name="nis_nip" value="{{ old('nis_nip', $user->nis_nip) }}" />
-                                    @error('nis_nip')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                    @if ($errors->has('nis_nip'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('nis_nip') }}</p>@endif
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Telepon</label>
                                     <input id="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="text" name="phone" value="{{ old('phone', $user->phone) }}" />
-                                    @error('phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                    @if ($errors->has('phone'))<p class="mt-1 text-sm text-red-600">{{ $errors->first('phone') }}</p>@endif
                                 </div>
                             </div>
                         </div>
