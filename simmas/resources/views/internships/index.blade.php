@@ -41,7 +41,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'active')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Aktif')->count() }}</div>
                     <p class="text-xs text-gray-500 mt-1">Sedang magang</p>
                 </div>
 
@@ -53,7 +53,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'completed')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Selesai')->count() }}</div>
                     <p class="text-xs text-gray-500 mt-1">Magang selesai</p>
                 </div>
 
@@ -65,7 +65,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'pending')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Pending')->count() }}</div>
                     <p class="text-xs text-gray-500 mt-1">Menunggu penempatan</p>
                 </div>
             </div>
@@ -171,20 +171,20 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            @if($internship->status == 'pending')
+                                            @if($internship->status == 'Pending')
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                            @elseif($internship->status == 'active')
+                                            @elseif($internship->status == 'Aktif')
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                                            @elseif($internship->status == 'completed')
+                                            @elseif($internship->status == 'Selesai')
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Selesai</span>
-                                            @elseif($internship->status == 'cancelled')
+                                            @elseif($internship->status == 'Ditolak')
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
                                             @endif
                                         </td>
                                         <td class="py-4 px-4">
-                                            @if($internship->grade)
+                                            @if($internship->final_score)
                                                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lime-500 text-white font-bold">
-                                                    {{ $internship->grade }}
+                                                    {{ $internship->final_score }}
                                                 </span>
                                             @else
                                                 <span class="text-gray-400 text-sm">-</span>
