@@ -97,7 +97,7 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
-        $request->validate([
+        $validated = $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
             'teacher_id' => 'required|exists:users,id',
@@ -105,9 +105,15 @@ class InternshipController extends Controller
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
             'status' => 'required|in:Pending,Aktif,Selesai,Ditolak',
+            'final_score' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        $internship->update($request->all());
+        // Only allow setting final_score when status is 'Selesai'
+        if (($validated['status'] ?? $internship->status) !== 'Selesai') {
+            $validated['final_score'] = null;
+        }
+
+        $internship->update($validated);
 
         return redirect()->route('internships.index')->with('success', 'Data magang berhasil diperbarui');
     }

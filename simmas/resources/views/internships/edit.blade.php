@@ -110,18 +110,18 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Akhir</label>
                                 <input 
-                                    id="grade" 
+                                    id="final_score" 
                                     type="number" 
                                     min="0" 
                                     max="100" 
                                     step="0.01"
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('grade') border-red-300 @enderror" 
-                                    name="grade" 
-                                    value="{{ old('grade', $internship->grade) }}"
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('final_score') border-red-300 @enderror" 
+                                    name="final_score" 
+                                    value="{{ old('final_score', $internship->final_score) }}"
                                     placeholder="Hanya bisa diisi jika status selesai"
                                 >
                                 <p class="mt-2 text-sm text-gray-500">Nilai hanya dapat diisi setelah status magang selesai</p>
-                                @error('grade')
+                                @error('final_score')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -231,7 +231,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const statusSelect = document.getElementById('status');
-            const gradeInput = document.getElementById('grade');
+            const gradeInput = document.getElementById('final_score');
             
             function toggleGradeInput() {
                 if (statusSelect.value === 'Selesai') {

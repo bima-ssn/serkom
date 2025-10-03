@@ -39,7 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::post('journals/{journal}/verify', [JournalController::class, 'verify'])->name('journals.verify');
 
     // Users Management (Admin only - controller already enforces role)
-    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';
