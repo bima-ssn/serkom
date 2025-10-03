@@ -31,22 +31,22 @@
                         <div>
                             <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Tanggal Mulai</p>
-                                <p class="text-base">{{ \Carbon\Carbon::parse($internship->start_date)->format('d/m/Y') }}</p>
+                                <p class="text-base">{{ optional($internship->start_date)->format('d/m/Y') ?? '-' }}</p>
                             </div>
                             <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Tanggal Selesai</p>
-                                <p class="text-base">{{ \Carbon\Carbon::parse($internship->end_date)->format('d/m/Y') }}</p>
+                                <p class="text-base">{{ optional($internship->end_date)->format('d/m/Y') ?? '-' }}</p>
                             </div>
                             <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Status</p>
                                 <div>
-                                    @if($internship->status == 'pending')
+                                    @if($internship->status == 'Pending')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
-                                    @elseif($internship->status == 'active')
+                                    @elseif($internship->status == 'Aktif')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                                    @elseif($internship->status == 'completed')
+                                    @elseif($internship->status == 'Selesai')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Selesai</span>
-                                    @elseif($internship->status == 'cancelled')
+                                    @elseif($internship->status == 'Ditolak')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
                                     @endif
                                 </div>
@@ -71,14 +71,14 @@
                                     @forelse ($internship->journals as $index => $journal)
                                         <tr class="odd:bg-white even:bg-gray-50">
                                             <td class="py-2.5 px-4 border-b border-gray-200">{{ $index + 1 }}</td>
-                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
-                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ Str::limit($journal->activity, 100) }}</td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ optional($journal->date)->format('d/m/Y') ?? '-' }}</td>
+                                            <td class="py-2.5 px-4 border-b border-gray-200">{{ \Illuminate\Support\Str::limit($journal->description, 100) }}</td>
                                             <td class="py-2.5 px-4 border-b border-gray-200">
-                                                @if($journal->status == 'pending')
+                                                @if($journal->status == 'Menunggu Verifikasi')
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
-                                                @elseif($journal->status == 'approved')
+                                                @elseif($journal->status == 'Disetujui')
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
-                                                @elseif($journal->status == 'rejected')
+                                                @elseif($journal->status == 'Ditolak')
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
                                                 @endif
                                             </td>
