@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     // DUDI Management
     Route::resource('dudis', DudiController::class);
     Route::post('dudis/{id}/restore', [DudiController::class, 'restore'])->name('dudis.restore');
+    Route::post('dudis/{dudi}/apply', [DudiController::class, 'apply'])->name('dudis.apply');
     
     // School Settings
     Route::resource('school-settings', SchoolSettingController::class)->only(['index', 'update']);
@@ -39,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::post('journals/{journal}/verify', [JournalController::class, 'verify'])->name('journals.verify');
 
     // Users Management (Admin only - controller already enforces role)
-    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';

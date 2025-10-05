@@ -103,7 +103,11 @@
 
                     <!-- Page Content -->
                     <main class="flex-1 bg-gray-50 p-6">
-                        {{ $slot }}
+                        @isset($slot)
+                            {{ $slot }}
+                        @else
+                            @yield('content')
+                        @endisset
                     </main>
                 </div>
             </div>

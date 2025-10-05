@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Manajemen DUDI') }}</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Cari Tempat Magang') }}</h2>
                 <x-breadcrumbs :items="[
                     ['label' => 'Dashboard', 'href' => route('dashboard')],
                     ['label' => 'DUDI']
@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -19,6 +19,205 @@
                 </div>
             @endif
 
+            @if(Auth::user()->role == 'siswa')
+            <!-- Search and Filter Section (SISWA) -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                            <!-- Search Box -->
+                    <form action="{{ route('dudis.index') }}" method="GET" class="flex-1 max-w-2xl">
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        name="search" 
+                                        value="{{ request('search') }}"
+                                placeholder="Cari perusahaan, bidang..." 
+                                class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                    >
+                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                            </button>
+                                </div>
+                            </form>
+
+                            <!-- Entries Filter -->
+                            <form action="{{ route('dudis.index') }}" method="GET" class="flex items-center gap-2">
+                                <label class="text-sm text-gray-600 whitespace-nowrap">Tampilkan:</label>
+                                <select 
+                                    name="per_page" 
+                                    onchange="this.form.submit()"
+                                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                >
+                            <option value="6" {{ request('per_page', 6) == 6 ? 'selected' : '' }}>6</option>
+                            <option value="9" {{ request('per_page') == 9 ? 'selected' : '' }}>9</option>
+                            <option value="12" {{ request('per_page') == 12 ? 'selected' : '' }}>12</option>
+                            <option value="18" {{ request('per_page') == 18 ? 'selected' : '' }}>18</option>
+                                </select>
+                        <span class="text-sm text-gray-600">per halaman</span>
+                            </form>
+                </div>
+            </div>
+
+            <!-- Cards Grid (SISWA) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                @forelse ($dudis as $dudi)
+                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+                        <!-- Header with Icon -->
+                        <div class="p-6 pb-4">
+                            <div class="flex items-start gap-3 mb-4">
+                                <div class="flex-shrink-0 w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="font-bold text-gray-900 text-lg mb-1 truncate">{{ $dudi->name }}</h3>
+                                    <p class="text-sm text-gray-600">{{ $dudi->field ?? 'Teknologi Informasi' }}</p>
+                                    <span class="inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-200 text-gray-700' }}">
+                                        {{ $dudi->status === 'Aktif' ? 'Membuka' : 'Tutup' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="flex items-start gap-2 text-sm text-gray-600 mb-3">
+                                <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span class="line-clamp-1">{{ $dudi->address }}</span>
+                            </div>
+
+                            <!-- PIC -->
+                            <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                <span>PIC: {{ $dudi->pic_name }}</span>
+                            </div>
+
+                            <!-- Kuota Progress -->
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="text-gray-600">Kuota Magang</span>
+                                    <span class="font-semibold text-gray-900">{{ $dudi->students_count ?? 0 }}/{{ $dudi->quota ?? 12 }}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    @php
+                                        $quota = $dudi->quota ?? 12;
+                                        $current = $dudi->students_count ?? 0;
+                                        $percentage = $quota > 0 ? ($current / $quota) * 100 : 0;
+                                    @endphp
+                                    <div class="bg-cyan-500 h-2 rounded-full transition-all duration-300" style="width: {{ min($percentage, 100) }}%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">{{ $quota - $current }} slot tersisa</p>
+                            </div>
+
+                            <!-- Description -->
+                            <p class="text-sm text-gray-600 line-clamp-3 mb-4">
+                                {{ $dudi->description ?? 'Perusahaan teknologi yang bergerak dalam bidang pengembangan software dan mobile. Memberikan kesempatan kepada siswa untuk mengasah skill programming mereka.' }}
+                            </p>
+                        </div>
+
+                        <!-- Footer Actions -->
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2">
+                            <button 
+                                onclick="window.location.href='{{ route('dudis.show', $dudi) }}'"
+                                class="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Detail
+                            </button>
+                            
+                            @if(Auth::user()->role == 'siswa')
+                            <a 
+                                href="{{ route('dudis.show', $dudi) }}?apply=1"
+                                class="flex-1 w-full px-4 py-2 bg-cyan-500 rounded-lg text-white text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                Daftar
+                            </a>
+                            @endif
+
+                            @if(Auth::user()->role == 'admin')
+                            <a 
+                                href="{{ route('dudis.edit', $dudi) }}"
+                                class="flex-1 px-4 py-2 bg-cyan-500 rounded-lg text-white text-sm font-medium hover:bg-cyan-600 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Edit
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-full">
+                        <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+                            <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Tidak ada tempat magang</h3>
+                            <p class="text-gray-500 mb-6">Belum ada perusahaan yang tersedia untuk program magang</p>
+                            @if(Auth::user()->role == 'admin')
+                            <a href="{{ route('dudis.create') }}" class="inline-flex items-center px-6 py-3 bg-cyan-500 text-white font-medium rounded-lg hover:bg-cyan-600 transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Tambah DUDI
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                                @endforelse
+                    </div>
+
+                    <!-- Pagination (SISWA) -->
+                    @if($dudis->hasPages())
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div class="text-sm text-gray-600">
+                            Menampilkan {{ $dudis->firstItem() }} sampai {{ $dudis->lastItem() }} dari {{ $dudis->total() }} perusahaan
+                            </div>
+                        <div class="flex items-center gap-1">
+                            {{-- Previous Button --}}
+                            @if ($dudis->onFirstPage())
+                                <span class="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">‹</span>
+                            @else
+                                <a href="{{ $dudis->previousPageUrl() }}" class="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">‹</a>
+                            @endif
+
+                            {{-- Page Numbers --}}
+                            @foreach(range(1, $dudis->lastPage()) as $page)
+                                @if($page == $dudis->currentPage())
+                                    <span class="px-3 py-2 text-sm border border-cyan-500 rounded-lg bg-cyan-500 text-white font-medium">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $dudis->url($page) }}" class="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">{{ $page }}</a>
+                                @endif
+                            @endforeach
+
+                            {{-- Next Button --}}
+                            @if ($dudis->hasMorePages())
+                                <a href="{{ $dudis->nextPageUrl() }}" class="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">›</a>
+                            @else
+                                <span class="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">›</span>
+                            @endif
+
+                            {{-- Last Page Button --}}
+                            <a href="{{ $dudis->url($dudis->lastPage()) }}" class="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">»</a>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @else
+            <!-- ADMIN/GURU ORIGINAL VIEW -->
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <!-- Total DUDI -->
@@ -36,7 +235,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- DUDI Aktif -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between">
@@ -52,7 +250,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- DUDI Tidak Aktif -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between">
@@ -68,7 +265,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Total Siswa Magang -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between">
@@ -89,7 +285,6 @@
             <!-- Main Content Card -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <!-- Header with Search and Add Button -->
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,32 +292,16 @@
                             </svg>
                             <h3 class="text-lg font-semibold text-gray-900">Daftar DUDI</h3>
                         </div>
-                        
                         <div class="flex flex-col md:flex-row gap-3">
-                            <!-- Search Box -->
                             <form action="{{ route('dudis.index') }}" method="GET" class="flex-1 md:w-96">
                                 <div class="relative">
-                                    <input 
-                                        type="text" 
-                                        name="search" 
-                                        value="{{ request('search') }}"
-                                        placeholder="Cari perusahaan, alamat, penanggung jawab..." 
-                                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-sm"
-                                    >
-                                    <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                    </svg>
+                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari perusahaan, alamat, penanggung jawab..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-sm">
+                                    <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 </div>
                             </form>
-
-                            <!-- Entries Filter -->
                             <form action="{{ route('dudis.index') }}" method="GET" class="flex items-center gap-2">
                                 <label class="text-sm text-gray-600 whitespace-nowrap">Tampilkan:</label>
-                                <select 
-                                    name="per_page" 
-                                    onchange="this.form.submit()"
-                                    class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                                >
+                                <select name="per_page" onchange="this.form.submit()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
                                     <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
                                     <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                                     <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
@@ -130,20 +309,15 @@
                                 </select>
                                 <span class="text-sm text-gray-600">entri</span>
                             </form>
-
-                            <!-- Add Button -->
                             @if(Auth::user()->role == 'admin')
                             <a href="{{ route('dudis.create') }}" class="inline-flex items-center px-4 py-2 bg-cyan-500 text-white text-sm font-medium rounded-lg hover:bg-cyan-600 whitespace-nowrap">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                 Tambah DUDI
                             </a>
                             @endif
                         </div>
                     </div>
 
-                    <!-- Table -->
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white">
                             <thead>
@@ -162,17 +336,12 @@
                                         <td class="py-4 px-4 border-b border-gray-200">
                                             <div class="flex items-center gap-3">
                                                 <div class="flex-shrink-0 w-10 h-10 bg-cyan-500 rounded-lg flex items-center justify-center">
-                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                                    </svg>
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                                                 </div>
                                                 <div>
                                                     <div class="font-semibold text-gray-900">{{ $dudi->name }}</div>
                                                     <div class="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        </svg>
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                                         {{ Str::limit($dudi->address, 40) }}
                                                     </div>
                                                 </div>
@@ -181,60 +350,38 @@
                                         <td class="py-4 px-4 border-b border-gray-200">
                                             <div class="text-sm">
                                                 <div class="flex items-center gap-1 text-gray-600 mb-1">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                                    </svg>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                                     {{ $dudi->email }}
                                                 </div>
                                                 <div class="flex items-center gap-1 text-gray-600">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                                    </svg>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                                                     {{ $dudi->phone }}
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                                    </svg>
-                                                </div>
-                                                <span class="text-sm text-gray-900">{{ $dudi->pic_name }}</span>
-                                            </div>
+                                            <div class="flex items-center gap-2"><div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div><span class="text-sm text-gray-900">{{ $dudi->pic_name }}</span></div>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
-                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                {{ $dudi->status }}
-                                            </span>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $dudi->status }}</span>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
-                                            <div class="flex items-center justify-center w-8 h-8 bg-yellow-400 text-white text-sm font-bold rounded-full">
-                                                {{ $dudi->students_count ?? 0 }}
-                                            </div>
+                                            <div class="flex items-center justify-center w-8 h-8 bg-yellow-400 text-white text-sm font-bold rounded-full">{{ $dudi->students_count ?? 0 }}</div>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
                                             <div class="flex items-center gap-2">
                                                 <a href="{{ route('dudis.show', $dudi) }}" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Detail">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                    </svg>
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                                 </a>
                                                 @if(Auth::user()->role == 'admin')
                                                 <a href="{{ route('dudis.edit', $dudi) }}" class="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors" title="Edit">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                    </svg>
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                                 </a>
                                                 <form action="{{ route('dudis.destroy', $dudi) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus DUDI ini?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                        </svg>
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                     </button>
                                                 </form>
                                                 @endif
@@ -245,15 +392,11 @@
                                     <tr>
                                         <td colspan="6" class="py-12 px-4 border-b border-gray-200 text-center">
                                             <div class="flex flex-col items-center justify-center">
-                                                <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                                </svg>
+                                                <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                                                 <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada DUDI</h3>
                                                 <p class="text-gray-500 mb-4">Mulai tambahkan perusahaan mitra untuk sistem magang</p>
                                                 <a href="{{ route('dudis.create') }}" class="inline-flex items-center px-4 py-2 bg-cyan-500 text-white text-sm font-medium rounded-lg hover:bg-cyan-600">
-                                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                                    </svg>
+                                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                                     Tambah DUDI
                                                 </a>
                                             </div>
@@ -277,6 +420,7 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

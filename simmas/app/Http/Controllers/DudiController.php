@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dudi;
 use App\Models\Internship;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DudiController extends Controller
@@ -152,6 +153,50 @@ class DudiController extends Controller
         $dudi = Dudi::withTrashed()->findOrFail($id);
         $dudi->restore();
         return redirect()->route('dudis.index')->with('success', 'DUDI berhasil dipulihkan.');
+    }
+
+    /**
+     * Allow student to apply to a DUDI with max 3 active/pending applications.
+     */
+    public function apply(Request $request, Dudi $dudi)
+    {
+        $user = $request->user();
+        if ($user->role !== 'siswa') {
+            abort(403);
+        }
+
+        if ($dudi->status !== 'Aktif') {
+            return back()->with('success', 'DUDI tidak aktif. Pendaftaran tidak dapat dilakukan.');
+        }
+
+        // Prevent duplicate application to the same DUDI with non-finalized status
+        $duplicate = Internship::where('student_id', $user->id)
+            ->where('dudi_id', $dudi->id)
+            ->whereIn('status', ['Pending', 'Aktif', 'proses', 'process'])
+            ->exists();
+        if ($duplicate) {
+            return back()->with('success', 'Anda sudah mendaftar ke DUDI ini.');
+        }
+
+        // Enforce max 3 applications that are not final (Pending/Aktif/Proses)
+        $activeCount = Internship::where('student_id', $user->id)
+            ->whereIn('status', ['Pending', 'Aktif', 'proses', 'process'])
+            ->count();
+        if ($activeCount >= 3) {
+            return back()->with('success', 'Batas pendaftaran 3 DUDI telah tercapai.');
+        }
+
+        // Auto-assign any available teacher (first guru) if exists
+        $teacherId = User::where('role', 'guru')->value('id');
+
+        Internship::create([
+            'student_id' => $user->id,
+            'teacher_id' => $teacherId, // may be null if no teacher exists
+            'dudi_id' => $dudi->id,
+            'status' => 'Pending',
+        ]);
+
+        return back()->with('success', 'Pendaftaran magang berhasil diajukan, menunggu verivikasi dari pihak guru');
     }
 
     private function authorizeAdmin(Request $request): void

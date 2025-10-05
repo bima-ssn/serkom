@@ -17,28 +17,93 @@ class JournalController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $journals = [];
 
-        if ($user->role === 'admin' || $user->role === 'guru') {
-            if ($user->role === 'guru') {
-                $journals = Journal::whereHas('internship', function($q) use ($user) {
-                        $q->where('teacher_id', $user->id);
-                    })
-                    ->with('internship')
-                    ->latest()
-                    ->paginate(10);
-            } else {
-                $journals = Journal::with('internship')->latest()->paginate(10);
-            }
-        } else {
-            $internships = Internship::where('student_id', $user->id)->pluck('id');
-            $journals = Journal::whereIn('internship_id', $internships)->with('internship')->latest()->paginate(10);
+        $perPage = (int) $request->integer('per_page', 10);
+        $status = $request->get('status'); // Disetujui | Ditolak | Menunggu Verifikasi
+        $month = $request->integer('month');
+        $year = $request->integer('year');
+        $date = $request->get('date'); // YYYY-MM-DD
+        $search = $request->get('search');
+
+        // Base query depends on role
+        if ($user->role === 'admin') {
+            $baseQuery = Journal::query();
+        } elseif ($user->role === 'guru') {
+            $baseQuery = Journal::whereHas('internship', function ($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            });
+        } else { // siswa
+            $internshipIds = Internship::where('student_id', $user->id)->pluck('id');
+            $baseQuery = Journal::whereIn('internship_id', $internshipIds);
         }
 
-        return view('journals.index', compact('journals'));
+        // Counters for stat cards (without filters)
+        $totalCount = (clone $baseQuery)->count();
+        $pendingCount = (clone $baseQuery)->where('status', 'Menunggu Verifikasi')->count();
+        $approvedCount = (clone $baseQuery)->where('status', 'Disetujui')->count();
+        $rejectedCount = (clone $baseQuery)->where('status', 'Ditolak')->count();
+
+        // Apply filters to listing query
+        $query = (clone $baseQuery)
+            ->with(['internship.student', 'internship.teacher', 'internship.dudi']);
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+        if ($month) {
+            $query->whereMonth('date', $month);
+        }
+        if ($year) {
+            $query->whereYear('date', $year);
+        }
+        if ($date) {
+            $query->whereDate('date', $date);
+        }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                  ->orWhere('teacher_notes', 'like', "%{$search}%")
+                  ->orWhereHas('internship.student', function ($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('internship.dudi', function ($q3) use ($search) {
+                      $q3->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $journals = $query
+            ->orderByDesc('date')
+            ->orderByDesc('created_at')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        // Student reminder if no journal created today
+        $showReminder = false;
+        if ($user->role === 'siswa') {
+            $hasTodayJournal = (clone $baseQuery)->whereDate('date', now()->toDateString())->exists();
+            $showReminder = !$hasTodayJournal;
+        }
+
+        return view('journals.index', [
+            'journals' => $journals,
+            'totalCount' => $totalCount,
+            'pendingCount' => $pendingCount,
+            'approvedCount' => $approvedCount,
+            'rejectedCount' => $rejectedCount,
+            'perPage' => $perPage,
+            'filters' => [
+                'status' => $status,
+                'month' => $month,
+                'year' => $year,
+                'date' => $date,
+                'search' => $search,
+            ],
+            'showReminder' => $showReminder,
+        ]);
     }
 
     /**

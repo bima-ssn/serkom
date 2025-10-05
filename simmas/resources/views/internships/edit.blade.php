@@ -12,11 +12,12 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Modal Style Form -->
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg max-w-4xl mx-auto">
-                <div class="p-8">
+    <!-- Modal Overlay -->
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="max-w-4xl w-full">
+            <!-- Modal Content -->
+            <div class="bg-white overflow-hidden shadow-2xl rounded-2xl transform transition-all animate-modal-slide-up">
+                <div class="p-8 max-h-[90vh] overflow-y-auto">
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-2">
                         <div>
@@ -110,100 +111,27 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Akhir</label>
                                 <input 
-                                    id="grade" 
+                                    id="final_score" 
                                     type="number" 
                                     min="0" 
                                     max="100" 
                                     step="0.01"
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('grade') border-red-300 @enderror" 
-                                    name="grade" 
-                                    value="{{ old('grade', $internship->grade) }}"
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('final_score') border-red-300 @enderror" 
+                                    name="final_score" 
+                                    value="{{ old('final_score', $internship->final_score) }}"
                                     placeholder="Hanya bisa diisi jika status selesai"
                                 >
                                 <p class="mt-2 text-sm text-gray-500">Nilai hanya dapat diisi setelah status magang selesai</p>
-                                @error('grade')
+                                @error('final_score')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Informasi Siswa, Guru & DUDI -->
-                        <div class="mb-8 space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Siswa</label>
-                                <select 
-                                    id="student_id" 
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('student_id') border-red-300 @enderror" 
-                                    name="student_id" 
-                                    required
-                                >
-                                    <option value="">Pilih Siswa</option>
-                                    @foreach($students as $student)
-                                        <option value="{{ $student->id }}" {{ (old('student_id', $internship->student_id) == $student->id) ? 'selected' : '' }}>
-                                            {{ $student->name }} ({{ $student->nis_nip }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('student_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Guru Pembimbing</label>
-                                <select 
-                                    id="teacher_id" 
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('teacher_id') border-red-300 @enderror" 
-                                    name="teacher_id" 
-                                    required
-                                >
-                                    <option value="">Pilih Guru</option>
-                                    @foreach($teachers as $teacher)
-                                        <option value="{{ $teacher->id }}" {{ (old('teacher_id', $internship->teacher_id) == $teacher->id) ? 'selected' : '' }}>
-                                            {{ $teacher->name }} ({{ $teacher->nis_nip }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('teacher_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">DUDI</label>
-                                <select 
-                                    id="dudi_id" 
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('dudi_id') border-red-300 @enderror" 
-                                    name="dudi_id" 
-                                    required
-                                >
-                                    <option value="">Pilih DUDI</option>
-                                    @foreach($dudis as $dudi)
-                                        <option value="{{ $dudi->id }}" {{ (old('dudi_id', $internship->dudi_id) == $dudi->id) ? 'selected' : '' }}>
-                                            {{ $dudi->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('dudi_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Deskripsi Section -->
-                        <div class="mb-8">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
-                            <textarea 
-                                id="description" 
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('description') border-red-300 @enderror" 
-                                name="description" 
-                                rows="4"
-                                placeholder="Tambahkan deskripsi magang"
-                            >{{ old('description', $internship->description) }}</textarea>
-                            @error('description')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <!-- Hidden fields for data that shouldn't change -->
+                        <input type="hidden" name="student_id" value="{{ $internship->student_id }}">
+                        <input type="hidden" name="teacher_id" value="{{ $internship->teacher_id }}">
+                        <input type="hidden" name="dudi_id" value="{{ $internship->dudi_id }}">
 
                         <!-- Action Buttons -->
                         <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
@@ -227,11 +155,48 @@
         </div>
     </div>
 
+    <!-- Custom Styles for Modal Animation -->
+    <style>
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-modal-slide-up {
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        /* Custom scrollbar for modal */
+        .max-h-\[90vh\]::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+
     <!-- JavaScript for status-based grade input -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const statusSelect = document.getElementById('status');
-            const gradeInput = document.getElementById('grade');
+            const gradeInput = document.getElementById('final_score');
             
             function toggleGradeInput() {
                 if (statusSelect.value === 'Selesai') {
