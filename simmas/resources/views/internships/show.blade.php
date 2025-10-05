@@ -25,7 +25,7 @@
                             </div>
                             <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Guru Pembimbing</p>
-                                <p class="text-base">{{ $internship->teacher->name }} ({{ $internship->teacher->nis_nip }})</p>
+                                <p class="text-base">{{ optional($internship->teacher)->name ?? '-' }} ({{ optional($internship->teacher)->nis_nip ?? 'N/A' }})</p>
                             </div>
                         </div>
                         <div>

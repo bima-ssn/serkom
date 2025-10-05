@@ -96,6 +96,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
                             <h3 class="text-lg font-semibold text-gray-900">Daftar DUDI</h3>
+                            @if(Auth::user()->role == 'siswa')
+                                <span class="ml-2 text-sm text-gray-500">Pendaftaran tersisa: {{ max(0, 3 - ($studentPendingCount ?? 0)) }}/3</span>
+                            @endif
                         </div>
                         
                         <div class="flex flex-col md:flex-row gap-3">
@@ -237,6 +240,26 @@
                                                         </svg>
                                                     </button>
                                                 </form>
+                                                @endif
+                                                @if(Auth::user()->role == 'siswa')
+                                                    @php
+                                                        $myApp = ($studentApplicationsByDudi ?? collect())->get($dudi->id);
+                                                        $pendingLeft = max(0, 3 - ($studentPendingCount ?? 0));
+                                                    @endphp
+                                                    @if($myApp && $myApp->status === 'Pending')
+                                                        <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Menunggu verifikasi</span>
+                                                    @elseif($myApp && $myApp->status === 'Aktif')
+                                                        <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">Sedang magang</span>
+                                                    @elseif($dudi->status !== 'Aktif')
+                                                        <span class="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-500">Tidak aktif</span>
+                                                    @else
+                                                        <form action="{{ route('dudis.apply', $dudi) }}" method="POST" onsubmit="return confirm('Ajukan pendaftaran magang ke {{ $dudi->name }}?');">
+                                                            @csrf
+                                                            <button type="submit" class="px-3 py-2 bg-cyan-500 text-white rounded-lg text-xs hover:bg-cyan-600 disabled:opacity-50" {{ $pendingLeft <= 0 ? 'disabled' : '' }}>
+                                                                Daftar Magang
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </td>

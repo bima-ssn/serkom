@@ -42,6 +42,11 @@ class DudiController extends Controller
             $query->where('status', $status);
         }
 
+        // Students should see only active DUDI by default
+        if ($user->role === 'siswa' && !$request->has('status')) {
+            $query->where('status', 'Aktif');
+        }
+
         if ($user->role === 'admin' && $request->boolean('with_trashed')) {
             $query->withTrashed();
         }
@@ -63,7 +68,24 @@ class DudiController extends Controller
 
         $totalSiswaMagang = Internship::whereIn('status', ['active', 'Aktif'])->count();
 
-        return view('dudis.index', compact('dudis', 'stats', 'perPage', 'totalSiswaMagang'));
+        $studentPendingCount = 0;
+        $studentApplicationsByDudi = collect();
+        if ($user->role === 'siswa') {
+            $applications = Internship::where('student_id', $user->id)
+                ->whereIn('status', ['Pending', 'Aktif'])
+                ->get(['dudi_id', 'status']);
+            $studentPendingCount = $applications->where('status', 'Pending')->count();
+            $studentApplicationsByDudi = $applications->keyBy('dudi_id');
+        }
+
+        return view('dudis.index', compact(
+            'dudis',
+            'stats',
+            'perPage',
+            'totalSiswaMagang',
+            'studentPendingCount',
+            'studentApplicationsByDudi'
+        ));
     }
 
     /**
@@ -159,5 +181,44 @@ class DudiController extends Controller
         if ($request->user()->role !== 'admin') {
             abort(403);
         }
+    }
+
+    /**
+     * Allow student to apply to a DUDI (max 3 pending).
+     */
+    public function apply(Request $request, Dudi $dudi)
+    {
+        $user = $request->user();
+        if ($user->role !== 'siswa') {
+            abort(403);
+        }
+
+        if ($dudi->status !== 'Aktif') {
+            return back()->with('success', 'Perusahaan tidak aktif untuk pendaftaran.');
+        }
+
+        $existingForCompany = Internship::where('student_id', $user->id)
+            ->where('dudi_id', $dudi->id)
+            ->whereIn('status', ['Pending', 'Aktif'])
+            ->exists();
+        if ($existingForCompany) {
+            return back()->with('success', 'Anda sudah mendaftar atau sedang aktif di perusahaan ini.');
+        }
+
+        $pendingCount = Internship::where('student_id', $user->id)
+            ->where('status', 'Pending')
+            ->count();
+        if ($pendingCount >= 3) {
+            return back()->with('success', 'Batas maksimum 3 pendaftaran tercapai. Batalkan salah satu pengajuan untuk melanjutkan.');
+        }
+
+        Internship::create([
+            'student_id' => $user->id,
+            'teacher_id' => null,
+            'dudi_id' => $dudi->id,
+            'status' => 'Pending',
+        ]);
+
+        return back()->with('success', 'Pendaftaran magang berhasil diajukan, menunggu verivikasi dari pihak guru');
     }
 }

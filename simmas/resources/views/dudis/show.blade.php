@@ -4,11 +4,33 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Detail DUDI') }}
             </h2>
-            <div>
+            <div class="flex items-center gap-2">
                 @if(Auth::user()->role == 'admin')
                 <a href="{{ route('dudis.edit', $dudi) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2">
                     Edit
                 </a>
+                @endif
+                @if(Auth::user()->role == 'siswa' && $dudi->status === 'Aktif')
+                    @php
+                        $applications = \App\Models\Internship::where('student_id', Auth::id())
+                            ->whereIn('status', ['Pending', 'Aktif'])
+                            ->get(['dudi_id','status']);
+                        $already = $applications->firstWhere('dudi_id', $dudi->id);
+                        $pendingCount = $applications->where('status','Pending')->count();
+                        $pendingLeft = max(0, 3 - $pendingCount);
+                    @endphp
+                    @if($already && $already->status === 'Pending')
+                        <span class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded text-sm">Menunggu verifikasi</span>
+                    @elseif($already && $already->status === 'Aktif')
+                        <span class="px-3 py-2 bg-green-100 text-green-800 rounded text-sm">Sedang magang</span>
+                    @else
+                        <form action="{{ route('dudis.apply', $dudi) }}" method="POST" onsubmit="return confirm('Ajukan pendaftaran magang ke {{ $dudi->name }}?');">
+                            @csrf
+                            <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50" {{ $pendingLeft <= 0 ? 'disabled' : '' }}>
+                                Daftar Magang
+                            </button>
+                        </form>
+                    @endif
                 @endif
                 <a href="{{ route('dudis.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                     Kembali
@@ -21,6 +43,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
+                    @endif
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi DUDI</h3>
@@ -47,10 +74,7 @@
                                 <p class="text-sm font-medium text-gray-500">Nama PIC</p>
                                 <p class="text-base">{{ $dudi->pic_name }}</p>
                             </div>
-                            <div class="mb-4">
-                                <p class="text-sm font-medium text-gray-500">Kontak PIC</p>
-                                <p class="text-base">{{ $dudi->pic_contact }}</p>
-                            </div>
+                            
                             <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Status</p>
                                 <p class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

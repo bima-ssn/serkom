@@ -144,8 +144,8 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <div class="font-medium text-gray-900">{{ $internship->teacher->name }}</div>
-                                            <div class="text-sm text-gray-500">NIP: {{ $internship->teacher->nis_nip ?? 'N/A' }}</div>
+                                            <div class="font-medium text-gray-900">{{ optional($internship->teacher)->name ?? '-' }}</div>
+                                            <div class="text-sm text-gray-500">NIP: {{ optional($internship->teacher)->nis_nip ?? 'N/A' }}</div>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex items-center">

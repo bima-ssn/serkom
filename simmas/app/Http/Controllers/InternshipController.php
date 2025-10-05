@@ -53,7 +53,7 @@ class InternshipController extends Controller
         $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
-            'teacher_id' => 'required|exists:users,id',
+            'teacher_id' => 'nullable|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
@@ -100,7 +100,7 @@ class InternshipController extends Controller
         $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
-            'teacher_id' => 'required|exists:users,id',
+            'teacher_id' => 'nullable|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',

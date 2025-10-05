@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     
     // DUDI Management
     Route::resource('dudis', DudiController::class);
+    Route::post('dudis/{dudi}/apply', [DudiController::class, 'apply'])->name('dudis.apply');
     Route::post('dudis/{id}/restore', [DudiController::class, 'restore'])->name('dudis.restore');
     
     // School Settings
