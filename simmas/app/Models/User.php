@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -48,6 +49,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    
+    /**
+     * Normalize role to lowercase for consistent comparisons.
+     */
+    protected function role(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value) => is_string($value) ? strtolower($value) : $value,
+            set: fn (mixed $value) => is_string($value) ? strtolower($value) : $value,
+        );
     }
     
     /**
