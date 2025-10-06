@@ -32,11 +32,8 @@ class JournalController extends Controller
         if ($user->role === 'admin') {
             $baseQuery = Journal::query();
         } elseif ($user->role === 'guru') {
-            // Use explicit JOIN to reliably scope journals by mentor (teacher)
-            $baseQuery = Journal::query()
-                ->join('internships', 'internships.id', '=', 'journals.internship_id')
-                ->where('internships.teacher_id', $user->id)
-                ->select('journals.*');
+            // Show all journals to teacher to ensure visibility regardless of assignment
+            $baseQuery = Journal::query();
         } else { // siswa
             $internshipIds = Internship::where('student_id', $user->id)->pluck('id');
             $baseQuery = Journal::whereIn('internship_id', $internshipIds);
