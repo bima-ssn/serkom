@@ -57,8 +57,8 @@ class User extends Authenticatable
     protected function role(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value) => is_string($value) ? strtolower($value) : $value,
-            set: fn (mixed $value) => is_string($value) ? strtolower($value) : $value,
+            get: fn (mixed $value) => is_string($value) ? strtolower(trim($value)) : $value,
+            set: fn (mixed $value) => is_string($value) ? strtolower(trim($value)) : $value,
         );
     }
     

@@ -275,7 +275,7 @@
                                         @if($journal->teacher_notes)
                                             <div class="text-sm text-gray-700 max-w-xs">
                                                 <div class="font-medium text-gray-900 mb-1">Catatan Guru:</div>
-                                                {{ Str::limit($journal->teacher_notes, 100) }}
+                                                {{ \Illuminate\Support\Str::limit($journal->teacher_notes, 100) }}
                                             </div>
                                         @else
                                             <span class="text-sm text-gray-400 italic">Belum ada feedback</span>
