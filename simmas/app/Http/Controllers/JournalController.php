@@ -44,30 +44,30 @@ class JournalController extends Controller
 
         // Counters for stat cards (without filters)
         $totalCount = (clone $baseQuery)->count();
-        $pendingCount = (clone $baseQuery)->where('status', 'Menunggu Verifikasi')->count();
-        $approvedCount = (clone $baseQuery)->where('status', 'Disetujui')->count();
-        $rejectedCount = (clone $baseQuery)->where('status', 'Ditolak')->count();
+        $pendingCount = (clone $baseQuery)->where('journals.status', 'Menunggu Verifikasi')->count();
+        $approvedCount = (clone $baseQuery)->where('journals.status', 'Disetujui')->count();
+        $rejectedCount = (clone $baseQuery)->where('journals.status', 'Ditolak')->count();
 
         // Apply filters to listing query
         $query = (clone $baseQuery)
             ->with(['internship.student', 'internship.teacher', 'internship.dudi']);
 
         if ($status) {
-            $query->where('status', $status);
+            $query->where('journals.status', $status);
         }
         if ($month) {
-            $query->whereMonth('date', $month);
+            $query->whereMonth('journals.date', $month);
         }
         if ($year) {
-            $query->whereYear('date', $year);
+            $query->whereYear('journals.date', $year);
         }
         if ($date) {
-            $query->whereDate('date', $date);
+            $query->whereDate('journals.date', $date);
         }
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('description', 'like', "%{$search}%")
-                  ->orWhere('teacher_notes', 'like', "%{$search}%")
+                $q->where('journals.description', 'like', "%{$search}%")
+                  ->orWhere('journals.teacher_notes', 'like', "%{$search}%")
                   ->orWhereHas('internship.student', function ($q2) use ($search) {
                       $q2->where('name', 'like', "%{$search}%");
                   })
@@ -78,15 +78,15 @@ class JournalController extends Controller
         }
 
         $journals = $query
-            ->orderByDesc('date')
-            ->orderByDesc('created_at')
+            ->orderByDesc('journals.date')
+            ->orderByDesc('journals.created_at')
             ->paginate($perPage)
             ->withQueryString();
 
         // Student reminder if no journal created today
         $showReminder = false;
         if ($user->role === 'siswa') {
-            $hasTodayJournal = (clone $baseQuery)->whereDate('date', now()->toDateString())->exists();
+            $hasTodayJournal = (clone $baseQuery)->whereDate('journals.date', now()->toDateString())->exists();
             $showReminder = !$hasTodayJournal;
         }
 
