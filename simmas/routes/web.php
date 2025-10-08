@@ -35,6 +35,11 @@ Route::middleware('auth')->group(function () {
     // Internship Management
     Route::resource('internships', InternshipController::class);
     Route::get('internships/export/pdf', [InternshipController::class, 'exportPdf'])->name('internships.export');
+    Route::middleware('auth')->group(function () {
+        Route::get('internships/{internship}/confirm-finish', [InternshipController::class, 'confirmFinishForm'])->name('internships.confirm.finish.form');
+        Route::post('internships/{internship}/confirm-finish', [InternshipController::class, 'confirmFinishStore'])->name('internships.confirm.finish.store');
+        Route::get('internships/{internship}/certificate', [InternshipController::class, 'downloadCertificate'])->name('internships.certificate.download');
+    });
     
     // Journal Management
     Route::resource('journals', JournalController::class);
