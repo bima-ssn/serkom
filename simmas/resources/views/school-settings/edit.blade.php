@@ -51,7 +51,7 @@
                                     </label>
                                     @if($setting->logo)
                                         <div class="mb-3">
-                                            <img src="{{ Storage::url($setting->logo) }}" alt="Logo" class="h-20 w-20 object-contain border border-gray-200 rounded-lg p-2">
+                                            <img src="{{ Storage::disk('public')->url($setting->logo) }}" alt="Logo" class="h-20 w-20 object-contain border border-gray-200 rounded-lg p-2">
                                         </div>
                                     @endif
                                     <input 
@@ -240,7 +240,7 @@
                         <p class="text-xs font-medium text-gray-500 mb-3">Dashboard Header</p>
                         <div class="bg-gray-50 rounded-lg p-4 flex items-center gap-4">
                             @if($setting->logo)
-                                <img src="{{ Storage::url($setting->logo) }}" alt="Logo" class="h-12 w-12 object-contain">
+                                <img src="{{ Storage::disk('public')->url($setting->logo) }}" alt="Logo" class="h-12 w-12 object-contain">
                             @else
                                 <div class="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
                                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,7 +261,7 @@
                         <div class="bg-white border-2 border-gray-300 rounded-lg p-6">
                             <div class="flex items-start gap-4">
                                 @if($setting->logo)
-                                    <img src="{{ Storage::url($setting->logo) }}" alt="Logo" class="h-16 w-16 object-contain flex-shrink-0">
+                                    <img src="{{ Storage::disk('public')->url($setting->logo) }}" alt="Logo" class="h-16 w-16 object-contain flex-shrink-0">
                                 @else
                                     <div class="h-16 w-16 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
                                         <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +293,7 @@
                         <div class="bg-white border border-gray-300 rounded-lg p-4">
                             <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
                                 @if($setting->logo)
-                                    <img src="{{ Storage::url($setting->logo) }}" alt="Logo" class="h-12 w-12 object-contain">
+                                    <img src="{{ Storage::disk('public')->url($setting->logo) }}" alt="Logo" class="h-12 w-12 object-contain">
                                 @else
                                     <div class="h-12 w-12 bg-gray-100 rounded flex items-center justify-center">
                                         <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

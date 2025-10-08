@@ -12,6 +12,9 @@ class SchoolSetting extends Model
         'abbreviation',
         'address',
         'phone',
-        'email'
+        'email',
+        'website',
+        'principal_name',
+        'npsn'
     ];
 }

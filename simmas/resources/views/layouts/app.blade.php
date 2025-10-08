@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $schoolSetting->name ?? config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,9 +23,14 @@
                     <header class="bg-white shadow-sm border-b border-gray-200">
                         <div class="px-6 py-4">
                             <div class="flex items-center justify-between">
-                                <div>
-                                    <h1 class="text-2xl font-bold text-gray-900">SMK Negeri 1 Surabaya</h1>
-                                    <p class="text-sm text-gray-600">Sistem Manajemen Magang Siswa</p>
+                                <div class="flex items-center gap-3">
+                                    @if(($schoolSetting->logo ?? null))
+                                        <img src="{{ Storage::disk('public')->url($schoolSetting->logo) }}" alt="Logo" class="h-10 w-10 object-contain rounded-md border border-gray-200 p-1">
+                                    @endif
+                                    <div>
+                                        <h1 class="text-2xl font-bold text-gray-900">{{ $schoolSetting->name ?? 'Sekolah' }}</h1>
+                                        <p class="text-sm text-gray-600">Sistem Manajemen Magang Siswa</p>
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="text-right">
