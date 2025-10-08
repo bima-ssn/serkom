@@ -23,11 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Share the school settings globally for layouts and components
         View::composer('*', function ($view) {
-            static $cachedSetting = null;
-            if ($cachedSetting === null) {
-                $cachedSetting = SchoolSetting::first();
-            }
-            $view->with('schoolSetting', $cachedSetting);
+            $view->with('schoolSetting', SchoolSetting::first());
         });
     }
 }
