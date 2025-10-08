@@ -20,6 +20,8 @@ class Dudi extends Model
         'teacher_id'
     ];
 
+    
+
     /**
      * Get the internships for the DUDI.
      */

@@ -39,10 +39,13 @@ class SchoolSettingController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'abbreviation' => 'required|string|max:10',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'email' => 'required|email|max:255',
+            'abbreviation' => 'nullable|string|max:10',
+            'address' => 'nullable|string|max:1000',
+            'phone' => 'nullable|string|max:30',
+            'email' => 'nullable|email|max:255',
+            'website' => 'nullable|url|max:255',
+            'principal_name' => 'nullable|string|max:255',
+            'npsn' => 'nullable|string|max:50',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -51,7 +54,7 @@ class SchoolSettingController extends Controller
         if ($request->hasFile('logo')) {
             // Hapus logo lama jika ada
             if ($schoolSetting->logo) {
-                Storage::delete('public/' . $schoolSetting->logo);
+                Storage::disk('public')->delete($schoolSetting->logo);
             }
             
             // Simpan logo baru
