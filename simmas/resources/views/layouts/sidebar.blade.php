@@ -1,3 +1,8 @@
+@php
+    $role = Auth::user()->role ?? null;
+    $roleToLabel = ['admin' => 'Panel Admin', 'guru' => 'Panel Guru', 'siswa' => 'Panel Siswa'];
+    $panelLabel = $roleToLabel[$role] ?? 'Panel';
+@endphp
 <aside class="hidden sm:flex sm:flex-col w-64 bg-white shadow-lg">
     <!-- SIMMAS Header -->
     <div class="px-6 py-8">
@@ -9,7 +14,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-gray-900">SIMMAS</h1>
-                <p class="text-sm text-gray-600">Panel Admin</p>
+                <p class="text-sm text-gray-600">{{ $panelLabel }}</p>
             </div>
         </div>
     </div>
@@ -160,7 +165,7 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-gray-900">SIMMAS</h1>
-                        <p class="text-sm text-gray-600">Panel Admin</p>
+                        <p class="text-sm text-gray-600">{{ $panelLabel }}</p>
                     </div>
                 </div>
             </div>
