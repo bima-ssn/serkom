@@ -29,7 +29,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $totalCount ?? $internships->count() }}</div>
                     <p class="text-xs text-gray-500 mt-1">Siswa magang terdaftar</p>
                 </div>
 
@@ -41,7 +41,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Aktif')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $aktifCount ?? 0 }}</div>
                     <p class="text-xs text-gray-500 mt-1">Sedang magang</p>
                 </div>
 
@@ -53,7 +53,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Selesai')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $selesaiCount ?? 0 }}</div>
                     <p class="text-xs text-gray-500 mt-1">Magang selesai</p>
                 </div>
 
@@ -65,7 +65,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-900">{{ $internships->where('status', 'Pending')->count() }}</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $pendingCount ?? 0 }}</div>
                     <p class="text-xs text-gray-500 mt-1">Menunggu penempatan</p>
                 </div>
             </div>

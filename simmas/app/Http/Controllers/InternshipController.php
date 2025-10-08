@@ -57,7 +57,44 @@ class InternshipController extends Controller
         }
 
         $internships = $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
-        return view('internships.index', compact('internships', 'perPage'));
+        
+        // Build base query for counters (same scoping and filters except status and pagination)
+        $counterBase = Internship::query();
+        if ($user->role === 'guru') {
+            $counterBase->where('teacher_id', $user->id);
+        } elseif ($user->role === 'siswa') {
+            $counterBase->where('student_id', $user->id);
+        }
+        if ($dudiId) {
+            $counterBase->where('dudi_id', $dudiId);
+        }
+        if ($search) {
+            $counterBase->where(function ($q) use ($search) {
+                $q->whereHas('student', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('teacher', function ($q3) use ($search) {
+                    $q3->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('dudi', function ($q4) use ($search) {
+                    $q4->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $totalCount = (clone $counterBase)->count();
+        $aktifCount = (clone $counterBase)->where('status', 'Aktif')->count();
+        $selesaiCount = (clone $counterBase)->where('status', 'Selesai')->count();
+        $pendingCount = (clone $counterBase)->where('status', 'Pending')->count();
+
+        return view('internships.index', [
+            'internships' => $internships,
+            'perPage' => $perPage,
+            'totalCount' => $totalCount,
+            'aktifCount' => $aktifCount,
+            'selesaiCount' => $selesaiCount,
+            'pendingCount' => $pendingCount,
+        ]);
     }
 
     /**
