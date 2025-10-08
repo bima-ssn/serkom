@@ -137,6 +137,37 @@ class InternshipController extends Controller
     }
 
     /**
+     * Export internships list to PDF for teacher (guru).
+     */
+    public function exportPdf(Request $request)
+    {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
+
+        $internships = Internship::with(['dudi', 'student', 'teacher'])
+            ->latest()
+            ->get();
+
+        $data = [
+            'internships' => $internships,
+        ];
+
+        try {
+            if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('internships.pdf', $data)->setPaper('a4', 'portrait');
+                $filename = 'siswa-magang-' . now()->format('Ymd_His') . '.pdf';
+                return $pdf->download($filename);
+            }
+        } catch (\Throwable $e) {
+            // Fallback to HTML view below if PDF library is not installed or fails.
+        }
+
+        // Fallback: render printable HTML (user can use browser print to save as PDF)
+        return view('internships.pdf', $data);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, Internship $internship)

@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     
     // Internship Management
     Route::resource('internships', InternshipController::class);
+    Route::get('internships/export/pdf', [InternshipController::class, 'exportPdf'])->name('internships.export');
     
     // Journal Management
     Route::resource('journals', JournalController::class);
