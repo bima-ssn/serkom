@@ -13,7 +13,7 @@
     <div class="px-6 py-8 border-b border-gray-100">
         <div class="flex items-center gap-3">
             @if(($schoolSetting->logo ?? null))
-                <img src="{{ Storage::disk('public')->url($schoolSetting->logo) }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
+                <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
             @else
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -190,7 +190,7 @@
         
         <div class="flex items-center gap-3">
             @if(($schoolSetting->logo ?? null))
-                <img src="{{ Storage::disk('public')->url($schoolSetting->logo) }}" alt="Logo" class="w-8 h-8 rounded-lg border border-gray-200 p-1 object-contain">
+                <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-8 h-8 rounded-lg border border-gray-200 p-1 object-contain">
             @else
                 <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -218,13 +218,17 @@
         <aside class="relative z-50 w-64 bg-white h-full shadow-xl">
             <div class="px-6 py-8">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                        </svg>
-                    </div>
+                    @if(($schoolSetting->logo ?? null))
+                        <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
+                    @else
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                            </svg>
+                        </div>
+                    @endif
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900">SIMMAS</h1>
+                        <h1 class="text-xl font-bold text-gray-900">{{ $schoolSetting->name ?? 'SIMMAS' }}</h1>
                         <p class="text-sm text-gray-600">{{ $panelLabel }}</p>
                     </div>
                 </div>
