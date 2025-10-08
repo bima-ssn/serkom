@@ -29,10 +29,8 @@ class InternshipController extends Controller
 
         $query = Internship::with(['dudi', 'student', 'teacher']);
 
-        // Role scoping: guru melihat bimbingannya, siswa melihat miliknya, admin melihat semua
-        if ($user->role === 'guru') {
-            $query->where('teacher_id', $user->id);
-        } elseif ($user->role === 'siswa') {
+        // Role scoping: siswa melihat miliknya; guru & admin melihat semua
+        if ($user->role === 'siswa') {
             $query->where('student_id', $user->id);
         }
 
@@ -60,9 +58,7 @@ class InternshipController extends Controller
         
         // Build base query for counters (same scoping and filters except status and pagination)
         $counterBase = Internship::query();
-        if ($user->role === 'guru') {
-            $counterBase->where('teacher_id', $user->id);
-        } elseif ($user->role === 'siswa') {
+        if ($user->role === 'siswa') {
             $counterBase->where('student_id', $user->id);
         }
         if ($dudiId) {
