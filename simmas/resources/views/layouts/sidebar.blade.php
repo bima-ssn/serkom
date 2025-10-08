@@ -28,7 +28,7 @@
                  @keydown.space.prevent="collapsed = !collapsed" 
                  :title="collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'" 
                  class="group cursor-pointer select-none">
-                <h1 class="font-bold text-gray-900" :class="collapsed ? 'text-base' : 'text-xl'">{{ $schoolSetting->abbreviation ?? 'SIMMAS' }}</h1>
+                <h1 class="font-bold text-gray-900" :class="collapsed ? 'text-base' : 'text-xl'">{{ $schoolSetting->name ?? 'SIMMAS' }}</h1>
                 <p x-show="!collapsed" x-transition.opacity.duration.150ms class="text-sm text-gray-600">{{ $panelLabel }}</p>
             </div>
             
