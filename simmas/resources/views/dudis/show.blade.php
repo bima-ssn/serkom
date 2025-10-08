@@ -34,7 +34,7 @@
                             ->first();
                         $hasApplied = $existing && in_array($existing->status, ['Pending','Aktif','proses','process']);
                         $isPending = $existing && $existing->status === 'Pending';
-                        $quota = $dudi->quota ?? 12;
+                        $quota = $dudi->student_quota ?? 0;
                         $current = $dudi->internships->whereIn('status', ['Aktif','active'])->count();
                         $slotsLeft = max($quota - $current, 0);
                     @endphp

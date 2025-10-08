@@ -7,7 +7,7 @@ use App\Models\Internship;
 use App\Models\Journal;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {

@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
     // Journal Management
     Route::resource('journals', JournalController::class);
     Route::post('journals/{journal}/verify', [JournalController::class, 'verify'])->name('journals.verify');
+    
+    // Student Internship Data
+    Route::get('/student/internship', [InternshipController::class, 'studentInternship'])->name('student.internship');
 
     // Users Management (Admin only - controller already enforces role)
 });

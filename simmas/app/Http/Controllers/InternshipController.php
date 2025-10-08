@@ -35,7 +35,7 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
-        $dudis = Dudi::where('status', 'Aktif')->get();
+        $dudis = Dudi::whereIn('status', ['Aktif', 'Pending'])->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
         
@@ -82,7 +82,7 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
-        $dudis = Dudi::where('status', 'Aktif')->get();
+        $dudis = Dudi::whereIn('status', ['Aktif', 'Pending'])->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
         
@@ -116,6 +116,24 @@ class InternshipController extends Controller
         $internship->update($validated);
 
         return redirect()->route('internships.index')->with('success', 'Data magang berhasil diperbarui');
+    }
+
+    /**
+     * Display student's internship data.
+     */
+    public function studentInternship(Request $request)
+    {
+        if ($request->user()->role !== 'siswa') {
+            abort(403);
+        }
+        
+        $user = $request->user();
+        $internship = Internship::with(['dudi', 'teacher'])
+            ->where('student_id', $user->id)
+            ->latest()
+            ->first();
+            
+        return view('internships.student', compact('internship'));
     }
 
     /**

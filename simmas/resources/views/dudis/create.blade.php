@@ -9,57 +9,180 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">Tambah DUDI</h3>
+                        <p class="text-gray-600 mt-1">Isi formulir di bawah untuk menambahkan DUDI baru</p>
+                    </div>
+                    
                     <form method="POST" action="{{ route('dudis.store') }}">
                         @csrf
                         
-                        <div class="mb-4">
-                            <x-input-label for="name" :value="__('Nama DUDI')" />
-                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Kolom Kiri -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Nama Perusahaan <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="name" 
+                                        name="name" 
+                                        type="text" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('name') }}" 
+                                        placeholder="PT. Contoh Perusahaan"
+                                        required 
+                                        autofocus
+                                    />
+                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Alamat <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="address" 
+                                        name="address" 
+                                        type="text" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('address') }}" 
+                                        placeholder="Jl. Contoh No. 123, Jakarta"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Telepon <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="phone" 
+                                        name="phone" 
+                                        type="text" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('phone') }}" 
+                                        placeholder="021-12345678"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="student_quota" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Kuota Siswa <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="student_quota" 
+                                        name="student_quota" 
+                                        type="number" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('student_quota') }}" 
+                                        min="1"
+                                        placeholder="Masukkan kuota siswa"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('student_quota')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="teacher_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Guru Pembimbing
+                                    </label>
+                                    <select 
+                                        id="teacher_id" 
+                                        name="teacher_id" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    >
+                                        <option value="">Pilih Guru Pembimbing</option>
+                                        @foreach(\App\Models\User::where('role', 'guru')->get() as $teacher)
+                                            <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                                {{ $teacher->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-xs text-gray-500 mt-1">Opsional - Bisa diisi nanti</p>
+                                    <x-input-error :messages="$errors->get('teacher_id')" class="mt-2" />
+                                </div>
+                            </div>
+                            
+                            <!-- Kolom Kanan -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="email" 
+                                        name="email" 
+                                        type="email" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('email') }}" 
+                                        placeholder="info@perusahaan.com"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="pic_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Penanggung Jawab <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="pic_name" 
+                                        name="pic_name" 
+                                        type="text" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('pic_name') }}" 
+                                        placeholder="Nama PIC"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('pic_name')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Kategori <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        id="category" 
+                                        name="category" 
+                                        type="text" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                                        value="{{ old('category') }}" 
+                                        placeholder="IT, Manufaktur, Perhotelan, dll"
+                                        required
+                                    />
+                                    <x-input-error :messages="$errors->get('category')" class="mt-2" />
+                                </div>
+                                
+                                <div>
+                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Status <span class="text-red-500">*</span>
+                                    </label>
+                                    <select 
+                                        id="status" 
+                                        name="status" 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        required
+                                    >
+                                        <option value="Pending" {{ old('status', 'Pending') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                        <option value="Tidak Aktif" {{ old('status') == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="mb-4">
-                            <x-input-label for="address" :value="__('Alamat')" />
-                            <textarea id="address" name="address" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="3" required>{{ old('address') }}</textarea>
-                            <x-input-error :messages="$errors->get('address')" class="mt-2" />
-                        </div>
-                        
-                        <div class="mb-4">
-                            <x-input-label for="phone" :value="__('Telepon')" />
-                            <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
-                            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-                        </div>
-                        
-                        <div class="mb-4">
-                            <x-input-label for="email" :value="__('Email')" />
-                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                        </div>
-                        
-                        <div class="mb-4">
-                            <x-input-label for="pic_name" :value="__('Nama PIC')" />
-                            <x-text-input id="pic_name" class="block mt-1 w-full" type="text" name="pic_name" :value="old('pic_name')" required />
-                            <x-input-error :messages="$errors->get('pic_name')" class="mt-2" />
-                        </div>
-                        
-                        
-                        
-                        <div class="mb-4">
-                            <x-input-label for="status" :value="__('Status')" />
-                            <select id="status" name="status" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                                <option value="Tidak Aktif" {{ old('status') == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('status')" class="mt-2" />
-                        </div>
-                        
-                        <div class="flex items-center justify-end mt-4">
-                            <a href="{{ route('dudis.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 mr-2">
+                        <div class="flex items-center justify-end mt-8 pt-6 border-t">
+                            <a href="{{ route('dudis.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 mr-3 transition duration-150 ease-in-out">
                                 Batal
                             </a>
-                            <x-primary-button>
-                                {{ __('Simpan') }}
-                            </x-primary-button>
+                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700 transition duration-150 ease-in-out">
+                                Simpan
+                            </button>
                         </div>
                     </form>
                 </div>

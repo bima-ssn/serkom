@@ -47,6 +47,32 @@
             @endif
         </div>
 
+        @if($user->role === 'siswa')
+        <div>
+            <x-input-label for="nis_nip" :value="__('NIS')" />
+            <x-text-input id="nis_nip" name="nis_nip" type="text" class="mt-1 block w-full" :value="old('nis_nip', $user->nis_nip)" autocomplete="nis_nip" />
+            <x-input-error class="mt-2" :messages="$errors->get('nis_nip')" />
+        </div>
+
+        <div>
+            <x-input-label for="kelas" :value="__('Kelas')" />
+            <x-text-input id="kelas" name="kelas" type="text" class="mt-1 block w-full" :value="old('kelas', $user->kelas)" autocomplete="kelas" />
+            <x-input-error class="mt-2" :messages="$errors->get('kelas')" />
+        </div>
+
+        <div>
+            <x-input-label for="jurusan" :value="__('Jurusan')" />
+            <x-text-input id="jurusan" name="jurusan" type="text" class="mt-1 block w-full" :value="old('jurusan', $user->jurusan)" autocomplete="jurusan" />
+            <x-input-error class="mt-2" :messages="$errors->get('jurusan')" />
+        </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('Nomor Telepon')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="phone" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+        @endif
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

@@ -44,6 +44,8 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa',
             'nis_nip' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:15',
+            'kelas' => 'nullable|string|max:50',
+            'jurusan' => 'nullable|string|max:100',
         ]);
 
         User::create([
@@ -53,6 +55,8 @@ class UserController extends Controller
             'role' => $request->role,
             'nis_nip' => $request->nis_nip,
             'phone' => $request->phone,
+            'kelas' => $request->kelas,
+            'jurusan' => $request->jurusan,
         ]);
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil ditambahkan');
@@ -85,6 +89,8 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa',
             'nis_nip' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:15',
+            'kelas' => 'nullable|string|max:50',
+            'jurusan' => 'nullable|string|max:100',
         ]);
 
         $data = [
@@ -93,6 +99,8 @@ class UserController extends Controller
             'role' => $request->role,
             'nis_nip' => $request->nis_nip,
             'phone' => $request->phone,
+            'kelas' => $request->kelas,
+            'jurusan' => $request->jurusan,
         ];
 
         if ($request->filled('password')) {

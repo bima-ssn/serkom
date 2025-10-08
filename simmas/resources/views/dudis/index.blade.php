@@ -74,8 +74,8 @@
                                 <div class="flex-1 min-w-0">
                                     <h3 class="font-bold text-gray-900 text-lg mb-1 truncate">{{ $dudi->name }}</h3>
                                     <p class="text-sm text-gray-600">{{ $dudi->field ?? 'Teknologi Informasi' }}</p>
-                                    <span class="inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-200 text-gray-700' }}">
-                                        {{ $dudi->status === 'Aktif' ? 'Membuka' : 'Tutup' }}
+                                    <span class="inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : ($dudi->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-200 text-gray-700') }}">
+                                        {{ $dudi->status === 'Aktif' ? 'Membuka' : ($dudi->status === 'Pending' ? 'Menunggu' : 'Tutup') }}
                                     </span>
                                 </div>
                             </div>
@@ -101,11 +101,11 @@
                             <div class="mb-4">
                                 <div class="flex items-center justify-between text-sm mb-2">
                                     <span class="text-gray-600">Kuota Magang</span>
-                                    <span class="font-semibold text-gray-900">{{ $dudi->students_count ?? 0 }}/{{ $dudi->quota ?? 12 }}</span>
+                                    <span class="font-semibold text-gray-900">{{ $dudi->students_count ?? 0 }}/{{ $dudi->student_quota ?? 0 }}</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     @php
-                                        $quota = $dudi->quota ?? 12;
+                                        $quota = $dudi->student_quota ?? 0;
                                         $current = $dudi->students_count ?? 0;
                                         $percentage = $quota > 0 ? ($current / $quota) * 100 : 0;
                                     @endphp
@@ -363,7 +363,7 @@
                                             <div class="flex items-center gap-2"><div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div><span class="text-sm text-gray-900">{{ $dudi->pic_name }}</span></div>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
-                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $dudi->status }}</span>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $dudi->status === 'Aktif' ? 'bg-green-100 text-green-800' : ($dudi->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">{{ $dudi->status }}</span>
                                         </td>
                                         <td class="py-4 px-4 border-b border-gray-200">
                                             <div class="flex items-center justify-center w-8 h-8 bg-yellow-400 text-white text-sm font-bold rounded-full">{{ $dudi->students_count ?? 0 }}</div>

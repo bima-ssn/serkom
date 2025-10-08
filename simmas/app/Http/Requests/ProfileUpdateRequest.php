@@ -15,7 +15,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -26,5 +26,15 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];
+
+        // Tambahkan validasi khusus untuk role siswa
+        if ($this->user()->role === 'siswa') {
+            $rules['nis_nip'] = ['nullable', 'string', 'max:20'];
+            $rules['kelas'] = ['nullable', 'string', 'max:50'];
+            $rules['jurusan'] = ['nullable', 'string', 'max:100'];
+            $rules['phone'] = ['nullable', 'string', 'max:15'];
+        }
+
+        return $rules;
     }
 }

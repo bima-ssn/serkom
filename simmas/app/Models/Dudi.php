@@ -14,7 +14,10 @@ class Dudi extends Model
         'phone',
         'email',
         'pic_name',
-        'status'
+        'status',
+        'student_quota',
+        'category',
+        'teacher_id'
     ];
 
     /**
@@ -23,5 +26,13 @@ class Dudi extends Model
     public function internships()
     {
         return $this->hasMany(Internship::class);
+    }
+
+    /**
+     * Get the teacher assigned to this DUDI.
+     */
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
     }
 }

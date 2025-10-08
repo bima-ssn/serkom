@@ -55,6 +55,7 @@ class DudiController extends Controller
             $stats = [
                 'total' => Dudi::count(),
                 'active' => Dudi::where('status', 'Aktif')->count(),
+                'pending' => Dudi::where('status', 'Pending')->count(),
                 'inactive' => Dudi::where('status', 'Tidak Aktif')->count(),
                 'totalStudents' => Internship::whereIn('status', ['active','Aktif'])->count(),
             ];
@@ -88,7 +89,10 @@ class DudiController extends Controller
             'phone' => ['required','string','max:20','regex:/^[\d\-\+]+$/'],
             'email' => 'required|email|max:255|unique:dudis,email',
             'pic_name' => 'required|string|max:255',
-            'status' => 'required|in:Aktif,Tidak Aktif',
+            'status' => 'required|in:Pending,Aktif,Tidak Aktif',
+            'student_quota' => 'required|integer|min:1',
+            'category' => 'required|string|max:100',
+            'teacher_id' => 'nullable|exists:users,id',
         ]);
 
         Dudi::create($validated);
@@ -126,7 +130,10 @@ class DudiController extends Controller
             'phone' => ['required','string','max:20','regex:/^[\d\-\+]+$/'],
             'email' => 'required|email|max:255|unique:dudis,email,' . $dudi->id,
             'pic_name' => 'required|string|max:255',
-            'status' => 'required|in:Aktif,Tidak Aktif',
+            'status' => 'required|in:Pending,Aktif,Tidak Aktif',
+            'student_quota' => 'required|integer|min:1',
+            'category' => 'required|string|max:100',
+            'teacher_id' => 'nullable|exists:users,id',
         ]);
 
         $dudi->update($validated);
@@ -165,7 +172,7 @@ class DudiController extends Controller
             abort(403);
         }
 
-        if ($dudi->status !== 'Aktif') {
+        if (!in_array($dudi->status, ['Aktif', 'Pending'])) {
             return back()->with('success', 'DUDI tidak aktif. Pendaftaran tidak dapat dilakukan.');
         }
 
