@@ -47,8 +47,16 @@ class DudiController extends Controller
             $query->withTrashed();
         }
 
-        $perPage = (int) $request->input('per_page', 10);
-        $perPage = in_array($perPage, [5, 10, 25, 50]) ? $perPage : 10;
+        // Per-page options: siswa view uses 6/9/12/18; admin/guru uses 5/10/25/50
+        if ($user->role === 'siswa') {
+            $perPage = (int) $request->input('per_page', 6);
+            $allowed = [6, 9, 12, 18];
+            $perPage = in_array($perPage, $allowed) ? $perPage : 6;
+        } else {
+            $perPage = (int) $request->input('per_page', 10);
+            $allowed = [5, 10, 25, 50];
+            $perPage = in_array($perPage, $allowed) ? $perPage : 10;
+        }
 
         $stats = null;
         if ($user->role === 'admin') {

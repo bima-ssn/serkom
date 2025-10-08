@@ -47,6 +47,8 @@
                                     <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
+                                    <input type="hidden" name="role" value="{{ request('role') }}">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                                 </div>
                             </form>
 
@@ -65,6 +67,8 @@
                                     <option value="guru" {{ request('role') == 'guru' ? 'selected' : '' }}>Guru</option>
                                     <option value="siswa" {{ request('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
                                 </select>
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                             </form>
 
                             <!-- Entries Filter -->
@@ -81,6 +85,8 @@
                                     <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
                                 </select>
                                 <span class="text-xs text-gray-500">entri</span>
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                <input type="hidden" name="role" value="{{ request('role') }}">
                             </form>
 
                             <!-- Add Button -->

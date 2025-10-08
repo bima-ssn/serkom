@@ -24,7 +24,7 @@
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                 <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
                             <!-- Search Box -->
-                    <form action="{{ route('dudis.index') }}" method="GET" class="flex-1 max-w-2xl">
+                            <form action="{{ route('dudis.index') }}" method="GET" class="flex-1 max-w-2xl">
                                 <div class="relative">
                                     <input 
                                         type="text" 
@@ -38,6 +38,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
                             </button>
+                                <input type="hidden" name="per_page" value="{{ request('per_page', 6) }}">
                                 </div>
                             </form>
 
@@ -55,6 +56,7 @@
                             <option value="18" {{ request('per_page') == 18 ? 'selected' : '' }}>18</option>
                                 </select>
                         <span class="text-sm text-gray-600">per halaman</span>
+                                <input type="hidden" name="search" value="{{ request('search') }}">
                             </form>
                 </div>
             </div>
@@ -297,6 +299,7 @@
                                 <div class="relative">
                                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari perusahaan, alamat, penanggung jawab..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-sm">
                                     <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                                 </div>
                             </form>
                             <form action="{{ route('dudis.index') }}" method="GET" class="flex items-center gap-2">
@@ -308,6 +311,7 @@
                                     <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
                                 </select>
                                 <span class="text-sm text-gray-600">entri</span>
+                                <input type="hidden" name="search" value="{{ request('search') }}">
                             </form>
                             @if(Auth::user()->role == 'admin')
                             <a href="{{ route('dudis.create') }}" class="inline-flex items-center px-4 py-2 bg-cyan-500 text-white text-sm font-medium rounded-lg hover:bg-cyan-600 whitespace-nowrap">
