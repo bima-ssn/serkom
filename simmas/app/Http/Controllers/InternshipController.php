@@ -6,6 +6,7 @@ use App\Models\Dudi;
 use App\Models\Internship;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class InternshipController extends Controller
 {
@@ -177,5 +178,100 @@ class InternshipController extends Controller
         }
         $internship->delete();
         return redirect()->route('internships.index')->with('success', 'Data magang berhasil dihapus');
+    }
+
+    /**
+     * Show confirmation form to mark internship as finished and collect signatures.
+     */
+    public function confirmFinishForm(Request $request, Internship $internship)
+    {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
+        $internship->load(['dudi', 'student', 'teacher']);
+        return view('internships.confirm-finish', compact('internship'));
+    }
+
+    /**
+     * Store signatures, set status to Selesai, and persist certificate meta.
+     */
+    public function confirmFinishStore(Request $request, Internship $internship)
+    {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'teacher_signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'dudi_signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'certificate_notes' => 'nullable|string|max:1000',
+            'finished_at' => 'nullable|date',
+        ]);
+
+        // Store signatures in public storage
+        $teacherSignaturePath = $request->file('teacher_signature')->store('signatures', 'public');
+        $dudiSignaturePath = $request->file('dudi_signature')->store('signatures', 'public');
+
+        // Update internship as finished and save meta to json column via description or new attributes if available
+        $internship->status = 'Selesai';
+        if (isset($validated['finished_at'])) {
+            $internship->end_date = $validated['finished_at'];
+        }
+
+        // Persist certificate meta in description (if no dedicated column exists)
+        $meta = [
+            'certificate_notes' => $validated['certificate_notes'] ?? null,
+            'teacher_signature_path' => $teacherSignaturePath,
+            'dudi_signature_path' => $dudiSignaturePath,
+        ];
+        $currentDescription = (string)($internship->description ?? '');
+        $metaBlock = "\n\n--- CERTIFICATE META ---\n" . json_encode($meta);
+        $internship->description = trim($currentDescription . $metaBlock);
+
+        $internship->save();
+
+        return redirect()
+            ->route('internships.certificate.download', $internship->id)
+            ->with('success', 'Magang dikonfirmasi selesai. Sertifikat siap diunduh.');
+    }
+
+    /**
+     * Download certificate PDF for finished internship.
+     */
+    public function downloadCertificate(Request $request, Internship $internship)
+    {
+        if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
+
+        $internship->load(['dudi', 'student', 'teacher']);
+
+        // Extract meta from description if present
+        $meta = [
+            'teacher_signature_path' => null,
+            'dudi_signature_path' => null,
+            'certificate_notes' => null,
+        ];
+        if (!empty($internship->description) && ($pos = strrpos($internship->description, '--- CERTIFICATE META ---')) !== false) {
+            $json = trim(substr($internship->description, $pos + strlen('--- CERTIFICATE META ---')));
+            $decoded = json_decode($json, true);
+            if (is_array($decoded)) {
+                $meta = array_merge($meta, $decoded);
+            }
+        }
+
+        $data = compact('internship', 'meta');
+
+        try {
+            if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('internships.certificate', $data)->setPaper('a4', 'portrait');
+                $filename = 'sertifikat-magang-' . str($internship->student->name)->slug('-') . '-' . now()->format('Ymd_His') . '.pdf';
+                return $pdf->download($filename);
+            }
+        } catch (\Throwable $e) {
+            // Fallback to HTML view
+        }
+
+        return view('internships.certificate', $data + ['isFallback' => true]);
     }
 }
