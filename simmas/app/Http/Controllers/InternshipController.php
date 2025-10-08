@@ -20,12 +20,44 @@ class InternshipController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Internship::with(['dudi', 'student', 'teacher'])->latest();
-        if ($dudiId = $request->input('dudi_id')) {
+        $user = $request->user();
+        $search = $request->get('search');
+        $status = $request->get('status'); // Pending|Aktif|Selesai|Ditolak
+        $dudiId = $request->get('dudi_id');
+        $perPage = (int) $request->integer('per_page', 10);
+        $perPage = in_array($perPage, [5, 10, 25, 50]) ? $perPage : 10;
+
+        $query = Internship::with(['dudi', 'student', 'teacher']);
+
+        // Role scoping: guru melihat bimbingannya, siswa melihat miliknya, admin melihat semua
+        if ($user->role === 'guru') {
+            $query->where('teacher_id', $user->id);
+        } elseif ($user->role === 'siswa') {
+            $query->where('student_id', $user->id);
+        }
+
+        if ($dudiId) {
             $query->where('dudi_id', $dudiId);
         }
-        $internships = $query->get();
-        return view('internships.index', compact('internships'));
+        if ($status) {
+            $query->where('status', $status);
+        }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('student', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('teacher', function ($q3) use ($search) {
+                    $q3->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('dudi', function ($q4) use ($search) {
+                    $q4->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $internships = $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
+        return view('internships.index', compact('internships', 'perPage'));
     }
 
     /**
