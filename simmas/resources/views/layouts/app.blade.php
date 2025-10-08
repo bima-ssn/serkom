@@ -25,7 +25,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     @if(($schoolSetting->logo ?? null))
-                                        <img src="{{ Storage::disk('public')->url($schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="h-10 w-10 object-contain rounded-md border border-gray-200 p-1">
+                                        <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="h-10 w-10 object-contain rounded-md border border-gray-200 p-1">
                                     @endif
                                     <div>
                                         <h1 class="text-2xl font-bold text-gray-900">{{ $schoolSetting->name ?? 'Sekolah' }}</h1>

@@ -13,7 +13,7 @@
     <div class="px-6 py-8 border-b border-gray-100">
         <div class="flex items-center gap-3">
             @if(($schoolSetting->logo ?? null))
-                <img src="{{ Storage::disk('public')->url($schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
+                <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
             @else
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -190,7 +190,7 @@
         
         <div class="flex items-center gap-3">
             @if(($schoolSetting->logo ?? null))
-                <img src="{{ Storage::disk('public')->url($schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-8 h-8 rounded-lg border border-gray-200 p-1 object-contain">
+                <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-8 h-8 rounded-lg border border-gray-200 p-1 object-contain">
             @else
                 <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -219,7 +219,7 @@
             <div class="px-6 py-8">
                 <div class="flex items-center gap-3">
                     @if(($schoolSetting->logo ?? null))
-                        <img src="{{ Storage::disk('public')->url($schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
+                        <img src="{{ asset('storage/' . $schoolSetting->logo) . '?v=' . optional($schoolSetting->updated_at)->timestamp }}" alt="Logo" class="w-10 h-10 rounded-lg border border-gray-200 p-1 object-contain">
                     @else
                         <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                             <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
