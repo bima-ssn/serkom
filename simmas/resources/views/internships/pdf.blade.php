@@ -17,6 +17,14 @@
         </style>
     </head>
     <body>
+        @if(!empty($isFallback))
+        <script>
+            // Auto open print dialog in fallback HTML mode
+            window.addEventListener('load', function () {
+                try { window.print(); } catch (e) {}
+            });
+        </script>
+        @endif
         <div class="header">
             <div class="school-name">{{ $schoolSetting->name ?? 'Sekolah' }}</div>
             @if(($schoolSetting->address ?? null) || ($schoolSetting->phone ?? null))

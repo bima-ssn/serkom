@@ -164,7 +164,7 @@ class InternshipController extends Controller
         }
 
         // Fallback: render printable HTML (user can use browser print to save as PDF)
-        return view('internships.pdf', $data);
+        return view('internships.pdf', $data + ['isFallback' => true]);
     }
 
     /**
