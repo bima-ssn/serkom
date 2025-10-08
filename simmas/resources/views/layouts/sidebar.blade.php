@@ -12,18 +12,10 @@
                     <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
                 </svg>
             </div>
-            <div x-show="!collapsed" x-transition.opacity.duration.150ms>
-                <h1 class="text-xl font-bold text-gray-900">SIMMAS</h1>
-                <p class="text-sm text-gray-600">{{ $panelLabel }}</p>
+            <div role="button" tabindex="0" @click="collapsed = !collapsed" @keydown.enter.prevent="collapsed = !collapsed" @keydown.space.prevent="collapsed = !collapsed" :title="collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'" class="group cursor-pointer select-none">
+                <h1 class="font-bold text-gray-900" :class="collapsed ? 'text-base' : 'text-xl'">SIMMAS</h1>
+                <p x-show="!collapsed" x-transition.opacity.duration.150ms class="text-sm text-gray-600">{{ $panelLabel }}</p>
             </div>
-            <button @click="collapsed = !collapsed" :aria-label="collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'" class="ml-auto p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 focus:ring-offset-white transition-colors">
-                <svg x-show="!collapsed" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m7 7l-7-7 7-7" />
-                </svg>
-                <svg x-show="collapsed" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7-7 7" />
-                </svg>
-            </button>
         </div>
     </div>
     
