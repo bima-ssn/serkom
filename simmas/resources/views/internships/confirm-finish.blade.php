@@ -44,8 +44,8 @@
                         @csrf
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Tanda Tangan Guru (PNG/JPG)</label>
-                            <input type="file" name="teacher_signature" accept="image/png,image/jpeg" class="mt-1 block w-full border-gray-300 rounded-md" required>
+                            <label class="block text-sm font-medium text-gray-700">Tanda Tangan Guru (PNG/JPG) <span class="text-gray-400 font-normal">(opsional)</span></label>
+                            <input type="file" name="teacher_signature" accept="image/png,image/jpeg" class="mt-1 block w-full border-gray-300 rounded-md">
                             @error('teacher_signature')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
@@ -63,6 +63,24 @@
                             <label class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
                             <input type="date" name="finished_at" value="{{ old('finished_at', optional($internship->end_date)->format('Y-m-d')) }}" class="mt-1 block w-full border-gray-300 rounded-md">
                             @error('finished_at')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nilai Akhir</label>
+                            <input
+                                type="number"
+                                name="final_score"
+                                id="final_score"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                value="{{ old('final_score', $internship->final_score) }}"
+                                class="mt-1 block w-full border-gray-300 rounded-md"
+                                placeholder="Masukkan nilai akhir (0 - 100)"
+                            >
+                            @error('final_score')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
