@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Status Magang Saya') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Status Magang Saya') }}</h2>
+                <x-breadcrumbs :items="[
+                    ['label' => 'Dashboard', 'href' => route('dashboard')],
+                    ['label' => 'Magang Saya']
+                ]" />
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -10,6 +16,28 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if($internship)
+                        @php
+                            $statusLower = strtolower($internship->status ?? '');
+                            $isSelesai = in_array($statusLower, ['selesai','completed']);
+                        @endphp
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between p-4 rounded-lg {{ $isSelesai ? 'bg-blue-50 border border-blue-200' : 'bg-emerald-50 border border-emerald-200' }}">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full flex items-center justify-center {{ $isSelesai ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600' }}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-gray-900">{{ $isSelesai ? 'Sudah Selesai' : 'Masih Lanjut' }}</div>
+                                        <div class="text-xs text-gray-600">Status magang Anda saat ini</div>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-700">
+                                    Periode: {{ optional($internship->start_date)->format('d M Y') ?? '-' }} - {{ optional($internship->end_date)->format('d M Y') ?? '-' }}
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-4">
                                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
