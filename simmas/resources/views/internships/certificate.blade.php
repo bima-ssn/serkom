@@ -14,9 +14,6 @@
             .section { margin: 12px 0; }
             .label { color: #6B7280; font-size: 12px; }
             .value { font-size: 14px; font-weight: 600; }
-            .grade-wrapper { text-align: center; margin: 8px 0 12px; }
-            .grade-label { color: #6B7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
-            .grade-value { font-size: 48px; font-weight: 800; line-height: 1; }
             table.meta { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
             table.meta td { padding: 6px 8px; }
             .signatures { margin-top: 36px; display: table; width: 100%; }
@@ -46,13 +43,6 @@
 
             <div class="cert-title">SERTIFIKAT SELESAI MAGANG</div>
 
-            @if($internship->final_score !== null)
-            <div class="grade-wrapper">
-                <div class="grade-label">Nilai Akhir</div>
-                <div class="grade-value">{{ number_format($internship->final_score, 2) }}</div>
-            </div>
-            @endif
-
             <div class="section">
                 <table class="meta">
                     <tr>
@@ -78,6 +68,10 @@
                     <tr>
                         <td class="label">Periode</td>
                         <td class="value">{{ optional($internship->start_date)->format('d M Y') ?? '-' }} - {{ optional($internship->end_date)->format('d M Y') ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Nilai Akhir</td>
+                        <td class="value">{{ $internship->final_score !== null ? number_format($internship->final_score, 2) : '-' }}</td>
                     </tr>
                     <tr>
                         <td class="label">Catatan</td>
