@@ -104,29 +104,7 @@
                             </div>
                         </div>
 
-                        <!-- Penilaian Section -->
-                        <div class="mb-8">
-                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Penilaian</h4>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Akhir</label>
-                                <input 
-                                    id="final_score" 
-                                    type="number" 
-                                    min="0" 
-                                    max="100" 
-                                    step="0.01"
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 @error('final_score') border-red-300 @enderror" 
-                                    name="final_score" 
-                                    value="{{ old('final_score', $internship->final_score) }}"
-                                    placeholder="Hanya bisa diisi jika status selesai"
-                                >
-                                <p class="mt-2 text-sm text-gray-500">Nilai hanya dapat diisi setelah status magang selesai</p>
-                                @error('final_score')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
+                        <!-- Penilaian dipindahkan ke halaman Konfirmasi Selesai -->
 
                         <!-- Hidden fields for data that shouldn't change -->
                         <input type="hidden" name="student_id" value="{{ $internship->student_id }}">

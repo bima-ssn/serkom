@@ -152,6 +152,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $dudis = Dudi::whereIn('status', ['Aktif', 'Pending'])->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
@@ -167,6 +170,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $validated = $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
@@ -175,13 +181,7 @@ class InternshipController extends Controller
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
             'status' => 'required|in:Pending,Aktif,Selesai,Ditolak',
-            'final_score' => 'nullable|numeric|min:0|max:100',
         ]);
-
-        // Only allow setting final_score when status is 'Selesai'
-        if (($validated['status'] ?? $internship->status) !== 'Selesai') {
-            $validated['final_score'] = null;
-        }
 
         $internship->update($validated);
 
@@ -257,6 +257,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $internship->load(['dudi', 'student', 'teacher']);
         return view('internships.confirm-finish', compact('internship'));
     }
@@ -267,6 +270,9 @@ class InternshipController extends Controller
     public function confirmFinishStore(Request $request, Internship $internship)
     {
         if ($request->user()->role !== 'guru') {
+            abort(403);
+        }
+        if ($request->user()->id !== $internship->teacher_id) {
             abort(403);
         }
 
