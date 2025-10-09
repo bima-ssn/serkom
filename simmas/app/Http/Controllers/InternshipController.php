@@ -272,7 +272,7 @@ class InternshipController extends Controller
 
         $validated = $request->validate([
             'teacher_signature' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-            'dudi_signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'dudi_signature' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'certificate_notes' => 'nullable|string|max:1000',
             'finished_at' => 'nullable|date',
             'final_score' => 'nullable|numeric|min:0|max:100',
@@ -282,7 +282,9 @@ class InternshipController extends Controller
         $teacherSignaturePath = $request->hasFile('teacher_signature')
             ? $request->file('teacher_signature')->store('signatures', 'public')
             : null;
-        $dudiSignaturePath = $request->file('dudi_signature')->store('signatures', 'public');
+        $dudiSignaturePath = $request->hasFile('dudi_signature')
+            ? $request->file('dudi_signature')->store('signatures', 'public')
+            : null;
 
         // Update internship as finished and save meta to json column via description or new attributes if available
         $internship->status = 'Selesai';

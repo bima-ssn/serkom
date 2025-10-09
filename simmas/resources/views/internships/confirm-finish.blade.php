@@ -52,8 +52,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Tanda Tangan DUDI (PNG/JPG)</label>
-                            <input type="file" name="dudi_signature" accept="image/png,image/jpeg" class="mt-1 block w-full border-gray-300 rounded-md" required>
+                            <label class="block text-sm font-medium text-gray-700">Tanda Tangan DUDI (PNG/JPG) <span class="text-gray-400 font-normal">(opsional)</span></label>
+                            <input type="file" name="dudi_signature" accept="image/png,image/jpeg" class="mt-1 block w-full border-gray-300 rounded-md">
                             @error('dudi_signature')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
