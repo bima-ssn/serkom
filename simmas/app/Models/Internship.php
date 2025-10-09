@@ -13,7 +13,8 @@ class Internship extends Model
         'status',
         'start_date',
         'end_date',
-        'final_score'
+        'final_score',
+        'description',
     ];
 
     protected $casts = [

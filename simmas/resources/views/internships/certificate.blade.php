@@ -70,6 +70,10 @@
                         <td class="value">{{ optional($internship->start_date)->format('d M Y') ?? '-' }} - {{ optional($internship->end_date)->format('d M Y') ?? '-' }}</td>
                     </tr>
                     <tr>
+                        <td class="label">Nilai Akhir</td>
+                        <td class="value">{{ $internship->final_score !== null ? number_format($internship->final_score, 2) : '-' }}</td>
+                    </tr>
+                    <tr>
                         <td class="label">Catatan</td>
                         <td class="value">{{ $meta['certificate_notes'] ?? '-' }}</td>
                     </tr>

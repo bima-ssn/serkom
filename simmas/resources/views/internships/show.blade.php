@@ -3,7 +3,9 @@
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Detail Magang') }}</h2>
             <div>
+                @if(auth()->user()->id === $internship->teacher_id)
                 <a href="{{ route('internships.edit', $internship->id) }}" class="inline-flex items-center px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded-md hover:bg-yellow-600 mr-2">Edit</a>
+                @endif
                 <a href="{{ route('internships.index') }}" class="inline-flex items-center px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">Kembali</a>
             </div>
         </div>
@@ -13,7 +15,7 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    @if(auth()->user()->role === 'guru')
+                    @if(auth()->user()->role === 'guru' && auth()->user()->id === $internship->teacher_id)
                     <div class="mb-6 flex items-center justify-end gap-2">
                         @if($internship->status !== 'Selesai')
                         <a href="{{ route('internships.confirm.finish.form', $internship->id) }}" class="inline-flex items-center px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">

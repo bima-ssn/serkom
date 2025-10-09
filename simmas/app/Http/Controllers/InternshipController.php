@@ -7,6 +7,7 @@ use App\Models\Internship;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class InternshipController extends Controller
 {
@@ -151,6 +152,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $dudis = Dudi::whereIn('status', ['Aktif', 'Pending'])->get();
         $students = User::where('role', 'siswa')->get();
         $teachers = User::where('role', 'guru')->get();
@@ -166,6 +170,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $validated = $request->validate([
             'dudi_id' => 'required|exists:dudis,id',
             'student_id' => 'required|exists:users,id',
@@ -174,13 +181,7 @@ class InternshipController extends Controller
             'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
             'status' => 'required|in:Pending,Aktif,Selesai,Ditolak',
-            'final_score' => 'nullable|numeric|min:0|max:100',
         ]);
-
-        // Only allow setting final_score when status is 'Selesai'
-        if (($validated['status'] ?? $internship->status) !== 'Selesai') {
-            $validated['final_score'] = null;
-        }
 
         $internship->update($validated);
 
@@ -256,6 +257,9 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
         $internship->load(['dudi', 'student', 'teacher']);
         return view('internships.confirm-finish', compact('internship'));
     }
@@ -268,17 +272,25 @@ class InternshipController extends Controller
         if ($request->user()->role !== 'guru') {
             abort(403);
         }
+        if ($request->user()->id !== $internship->teacher_id) {
+            abort(403);
+        }
 
         $validated = $request->validate([
-            'teacher_signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
-            'dudi_signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'teacher_signature' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'dudi_signature' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'certificate_notes' => 'nullable|string|max:1000',
             'finished_at' => 'nullable|date',
+            'final_score' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Store signatures in public storage
-        $teacherSignaturePath = $request->file('teacher_signature')->store('signatures', 'public');
-        $dudiSignaturePath = $request->file('dudi_signature')->store('signatures', 'public');
+        $teacherSignaturePath = $request->hasFile('teacher_signature')
+            ? $request->file('teacher_signature')->store('signatures', 'public')
+            : null;
+        $dudiSignaturePath = $request->hasFile('dudi_signature')
+            ? $request->file('dudi_signature')->store('signatures', 'public')
+            : null;
 
         // Update internship as finished and save meta to json column via description or new attributes if available
         $internship->status = 'Selesai';
@@ -286,15 +298,26 @@ class InternshipController extends Controller
             $internship->end_date = $validated['finished_at'];
         }
 
-        // Persist certificate meta in description (if no dedicated column exists)
+        // Set final score if provided
+        if (array_key_exists('final_score', $validated)) {
+            $internship->final_score = $validated['final_score'];
+        }
+
+        // Persist certificate meta
         $meta = [
             'certificate_notes' => $validated['certificate_notes'] ?? null,
             'teacher_signature_path' => $teacherSignaturePath,
             'dudi_signature_path' => $dudiSignaturePath,
         ];
-        $currentDescription = (string)($internship->description ?? '');
-        $metaBlock = "\n\n--- CERTIFICATE META ---\n" . json_encode($meta);
-        $internship->description = trim($currentDescription . $metaBlock);
+        if (Schema::hasColumn('internships', 'description')) {
+            $currentDescription = (string)($internship->description ?? '');
+            $metaBlock = "\n\n--- CERTIFICATE META ---\n" . json_encode($meta);
+            $internship->description = trim($currentDescription . $metaBlock);
+        } else {
+            // Fallback: store meta in local storage so proses tidak error
+            $metaPath = "certificates/meta/{$internship->id}.json";
+            Storage::disk('local')->put($metaPath, json_encode($meta));
+        }
 
         $internship->save();
 
@@ -314,7 +337,7 @@ class InternshipController extends Controller
 
         $internship->load(['dudi', 'student', 'teacher']);
 
-        // Extract meta from description if present
+        // Extract meta from description if present (or fallback file)
         $meta = [
             'teacher_signature_path' => null,
             'dudi_signature_path' => null,
@@ -325,6 +348,14 @@ class InternshipController extends Controller
             $decoded = json_decode($json, true);
             if (is_array($decoded)) {
                 $meta = array_merge($meta, $decoded);
+            }
+        } else {
+            $metaPath = "certificates/meta/{$internship->id}.json";
+            if (Storage::disk('local')->exists($metaPath)) {
+                $decoded = json_decode(Storage::disk('local')->get($metaPath), true);
+                if (is_array($decoded)) {
+                    $meta = array_merge($meta, $decoded);
+                }
             }
         }
 
