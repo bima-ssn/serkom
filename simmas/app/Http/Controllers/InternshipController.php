@@ -7,6 +7,7 @@ use App\Models\Internship;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class InternshipController extends Controller
 {
@@ -286,15 +287,21 @@ class InternshipController extends Controller
             $internship->end_date = $validated['finished_at'];
         }
 
-        // Persist certificate meta in description (if no dedicated column exists)
+        // Persist certificate meta
         $meta = [
             'certificate_notes' => $validated['certificate_notes'] ?? null,
             'teacher_signature_path' => $teacherSignaturePath,
             'dudi_signature_path' => $dudiSignaturePath,
         ];
-        $currentDescription = (string)($internship->description ?? '');
-        $metaBlock = "\n\n--- CERTIFICATE META ---\n" . json_encode($meta);
-        $internship->description = trim($currentDescription . $metaBlock);
+        if (Schema::hasColumn('internships', 'description')) {
+            $currentDescription = (string)($internship->description ?? '');
+            $metaBlock = "\n\n--- CERTIFICATE META ---\n" . json_encode($meta);
+            $internship->description = trim($currentDescription . $metaBlock);
+        } else {
+            // Fallback: store meta in local storage so proses tidak error
+            $metaPath = "certificates/meta/{$internship->id}.json";
+            Storage::disk('local')->put($metaPath, json_encode($meta));
+        }
 
         $internship->save();
 
@@ -314,7 +321,7 @@ class InternshipController extends Controller
 
         $internship->load(['dudi', 'student', 'teacher']);
 
-        // Extract meta from description if present
+        // Extract meta from description if present (or fallback file)
         $meta = [
             'teacher_signature_path' => null,
             'dudi_signature_path' => null,
@@ -325,6 +332,14 @@ class InternshipController extends Controller
             $decoded = json_decode($json, true);
             if (is_array($decoded)) {
                 $meta = array_merge($meta, $decoded);
+            }
+        } else {
+            $metaPath = "certificates/meta/{$internship->id}.json";
+            if (Storage::disk('local')->exists($metaPath)) {
+                $decoded = json_decode(Storage::disk('local')->get($metaPath), true);
+                if (is_array($decoded)) {
+                    $meta = array_merge($meta, $decoded);
+                }
             }
         }
 
