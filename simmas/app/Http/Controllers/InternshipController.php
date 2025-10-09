@@ -21,6 +21,9 @@ class InternshipController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        if ($user->role === 'siswa') {
+            return redirect()->route('student.internship');
+        }
         $search = $request->get('search');
         $status = $request->get('status'); // Pending|Aktif|Selesai|Ditolak
         $dudiId = $request->get('dudi_id');
